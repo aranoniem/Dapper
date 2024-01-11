@@ -30,26 +30,40 @@ class Rail():
 
             # Loading stations connections
             while True:
+                
                 lines = csv_file.readline()
                 data = lines.split(",")
+                departure_station = data[0]
+                arrival_station = data[1]
+                distance = data[2]
 
                 if not lines:
                     break
 
-                departure_station, arrival_station, distance = map(str.strip, data)
-                trajectory = Trajectory(departure_station, arrival_station, distance)
-                if trajectory not in self.trajectories:
-                    self.trajectories[departure_station] = trajectory
+                if departure_station not in self.trajectories:
+                """
+                als departure niet in self.trajectories is, dan departure station toevoegen
+                als departure wel in self.trajectories, dan arrival_station en distance toevoegen aan trajctory
+                class onder departure station
+                """
 
-            #assert self.trajectories[0].departure_station == "Alkmaar"
-            #assert self.trajectories[0].arrival_station == "Hoorn"
-            #assert self.trajectories[0].distance == 24
+            
+
+
+                    self.trajectories.add_trajectory(arrival_station, distance)
+                else:
+                    trajectory = Trajectory(arrival_station, distance)
+                    self.trajectories[departure_station] = trajectory
+                
+                
+
+            assert self.trajectories["Alkmaar"].departure_station == "Alkmaar"
+            assert self.trajectories["Alkmaar"].arrival_station == "Den Helder"
+            assert self.trajectories["Alkmaar"].distance == "36"
+            print(self.trajectories["Alkmaar"].arrival_station)
     
     def get_description(self):
-        print(self.trajectories)
-        for i in self.trajectories:
-            print(self.trajectories[i])
-        return True
+            
 
             
 if __name__ == "__main__":
