@@ -1,6 +1,6 @@
 from typing import Any
 from station import Station
-from railnetwork import Railnetwork
+#from railnetwork import Railnetwork
 
 if __name__ == '__main__':
 
@@ -21,15 +21,17 @@ if __name__ == '__main__':
     # Create connections
     rail_nl = Station(level_name)
 
-    rail_nl.print_station_overview()
+    #TEST STATEMENT rail_nl.print_station_overview()
     print('Welcome to RailNL.\n')
 
 
     train_1 = rail_nl.generate_trajectory()
+    #TEST STATEMENT print(train_1)
     train_2 = rail_nl.generate_trajectory()
     train_3 = rail_nl.generate_trajectory()
 
-    print('train, stations')
+    #TEST STATEMENT print('train, stations')
+    print("trein,stations")
     print(f'train_1, "{train_1}"')
     print(f'train_2, "{train_2}"')  
     print(f'train_3, "{train_3}"')

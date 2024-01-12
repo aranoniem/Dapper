@@ -13,10 +13,11 @@ class Connection:
         connections and sets up dictionary to store distance between connecting stations
         """
         self.arrival_station: str = arrival_station
-        self.distance: Any = distance #TODO typehint verbeteren (float, of int?)
+        self.distance: Any = distance #TODO specify typehint if possible
         self.connections = {}
         self.connection_update = {}
 
+    # TODO we need to check wheter we use this or the update, or both
     def add_connection(self, arrival_station: str, distance: Any):
         """
         adds destination and distance from departure station
@@ -26,6 +27,7 @@ class Connection:
 
         self.connections[arrival_station] = distance
 
+    # TODO we need to check wheter we use this or the update, or both
     def update_connection(self, arrival_station: str, distance: Any):
         """
         updates the dictionary in case of the departure station already being 
@@ -36,12 +38,12 @@ class Connection:
     
     def get_connection(self) -> Any:
         """
-        TODO
+        Returns all stations connected to primary station
         """
-        print(self.connections)
+        #TEST STATEMENT print(self.connections)
         return self.connections
 
-    # BUG: bij 1 station is de output: Dordrecht: (Rotterdam Centraal: 17, ) Met een spatie teveel.
+    # BUG: With one statement the output has one space too many after the distance
     def __str__(self):
         """post: returns description and list"""
         items_str = ", ".join(f'{station}: {distance}' for station, distance in self.connections.items())

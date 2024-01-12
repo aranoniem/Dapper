@@ -17,6 +17,7 @@ class Station():
         self.stations = {}
 
         #load connections between stations
+        # TODO move this function into load_connections to be able to use the station class in other classes and code?
         self.load_connections(f'data/Connecties{level}.csv')
 
     def load_connections(self, filename) -> None:
@@ -30,7 +31,7 @@ class Station():
             # Skip the header line
             csv_file.readline()
 
-
+            # TODO use panda to load csv_file instead of while true loop
             # Loading stations connections
             while True:
                 
@@ -76,29 +77,59 @@ class Station():
             #print(self.stations['Alkmaar'].arrival_station)    
 
     def print_station_overview(self) -> None:
+        """
+        For logic purposes if you want to see the overview of all connections
+
+        post: print an overview of all stations, connections and distances
+        """
+
         for station_name, station_instance in self.stations.items():
             print(f'{station_name}: {str(station_instance)}')
 
     def random_station(self):
-        self.random_station = random.choice(list(self.stations.keys()))
-        print(self.random_station)
-        return self.random_station
+        """
+        find a random station for the purpose of a starting point
+
+        post: returns a random station
+        """
+        random_station = random.choice(list(self.stations.keys()))
+        #TEST STATEMENT print(f'start station = {random_station}')
+        return random_station
 
     def random_connection(self, departure_station):
-        neighbours = list(self.stations[departure_station].get_connection())
-        print(neighbours)
+        """
+        find a random connection for the purpose of making a trajectory
 
-        random_index = random.sample(1, len(neighbours))
-        random_neighbour = neighbours[random_index - 1]
+        pre: enter a departure station
+        post: returns a station connected with the departure station 
+        """
+        neighbours = list(self.stations[departure_station].get_connection())
+        #TEST STATEMENT print(f'Connecties zijn: {neighbours}')
+
+        #TEST STATEMENT print(f'aantal buren: {len(neighbours)}')
+
+        if len(neighbours) > 1:
+            random_index = random.randint(1, len(neighbours))
+            #TEST STATEMENT print(random_index)
+            random_neighbour = neighbours[random_index - 1]
+            #TEST STATEMENT print(random_neighbour)
+        else:
+            random_neighbour = neighbours[0]
         return random_neighbour
     
     def generate_trajectory(self):
+        """
+        generate a trajectory based on hopping through stations
+        that are connected based on randomness
+
+        post: returns a list of connected stations
+        """
         # Initialize an empty list for a trajectory
         trajectory = []
 
         # Choose a random starting station
         _station = self.random_station()
-        print(_station)
+        #TEST STATEMENT print(_station)
         trajectory.append(_station)
 
         for i in range(5):
@@ -106,5 +137,5 @@ class Station():
             new_station = self.random_connection(_station)
             trajectory.append(new_station)
             _station = new_station
-        
+            
         return trajectory
