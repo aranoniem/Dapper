@@ -1,5 +1,6 @@
 import csv
 from connection import Connection
+import random
 
 class Station():
 
@@ -70,12 +71,27 @@ class Station():
             #assert self.stations['Alkmaar'].arrival_station == 'Hoorn'
             #assert self.stations['Alkmaar'].arrival_station == 'Den Helder'
             #assert self.stations['Alkmaar'].distance == '36'
-            #print(self.stations['Alkmaar'].arrival_station)
-    
-    def get_description(self):
-        pass
-    
+            #print(self.stations['Alkmaar'].arrival_station)    
 
     def print_station_overview(self):
         for station_name, station_instance in self.stations.items():
             print(f'{station_name}: {str(station_instance)}')
+
+    def is_visited(self, station):
+        pass
+
+    def set_visited(self, station):
+        self.visited_cities.add(station)
+        self.journey.append(station)
+
+    def travel(self):
+        random.seed(10)
+
+        station = random.choice(list(self.trajectories.keys()))
+
+        if not is_visited(station):
+            set_visited(station)
+            
+            neighbours = list(self.trajectories[station].keys())
+            if len(neighbours) > 1
+            next_station = neighbours[random.choice(len(n))
