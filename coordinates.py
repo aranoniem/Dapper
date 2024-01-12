@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 # Read station coordinates from StationsHolland.csv
 stations = {}
-with open('StationsHolland.csv', 'r') as csv_file:
+with open('data/StationsHolland.csv', 'r') as csv_file:
     csv_reader = csv.reader(csv_file)
     next(csv_reader)  # Skip the header line
 
@@ -15,7 +15,7 @@ with open('StationsHolland.csv', 'r') as csv_file:
 connections = {}
 times = {}
 
-with open('ConnectiesHolland.csv', 'r') as csv_file:
+with open('data/ConnectiesHolland.csv', 'r') as csv_file:
     csv_reader = csv.reader(csv_file)
     next(csv_reader)  # Skip the header line
 
