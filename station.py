@@ -1,9 +1,11 @@
-import csv
 from connection import Connection
 import random
 
 class Station():
-
+    """
+    Contains all the departure stations, and is linked to the 
+    arrivals stations through the Connection class
+    """
     def __init__(self, level):
         """
         Initialises connections for the appropriate 'railnetwork' version.
@@ -17,7 +19,7 @@ class Station():
         #load connections between stations
         self.load_connections(f'data/Connecties{level}.csv')
 
-    def load_connections(self, filename):
+    def load_connections(self, filename) -> None:
         """
         Parses information into memory
 
@@ -73,25 +75,36 @@ class Station():
             #assert self.stations['Alkmaar'].distance == '36'
             #print(self.stations['Alkmaar'].arrival_station)    
 
-    def print_station_overview(self):
+    def print_station_overview(self) -> None:
         for station_name, station_instance in self.stations.items():
             print(f'{station_name}: {str(station_instance)}')
 
-    def is_visited(self, station):
-        pass
+    def random_station(self):
+        self.random_station = random.choice(list(self.stations.keys()))
+        print(self.random_station)
+        return self.random_station
 
-    def set_visited(self, station):
-        self.visited_cities.add(station)
-        self.journey.append(station)
+    def random_connection(self, departure_station):
+        neighbours = list(self.stations[departure_station].get_connection())
+        print(neighbours)
 
-    def travel(self):
-        random.seed(10)
+        random_index = random.sample(1, len(neighbours))
+        random_neighbour = neighbours[random_index - 1]
+        return random_neighbour
+    
+    def generate_trajectory(self):
+        # Initialize an empty list for a trajectory
+        trajectory = []
 
-        station = random.choice(list(self.trajectories.keys()))
+        # Choose a random starting station
+        _station = self.random_station()
+        print(_station)
+        trajectory.append(_station)
 
-        if not is_visited(station):
-            set_visited(station)
-            
-            neighbours = list(self.trajectories[station].keys())
-            if len(neighbours) > 1
-            next_station = neighbours[random.choice(len(n))
+        for i in range(5):
+            i = i + 1
+            new_station = self.random_connection(_station)
+            trajectory.append(new_station)
+            _station = new_station
+        
+        return trajectory

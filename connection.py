@@ -1,6 +1,9 @@
 from typing import Any
 
 class Connection:
+    """
+    Contains all the connecting stations and their distances to the departure station defined in the Station 
+    """
     
     def __init__(self, arrival_station: str, distance: Any) -> None:
         """
@@ -30,21 +33,13 @@ class Connection:
         """
         self.connection_update[arrival_station] = distance
         self.connections.update(self.connection_update)
-
-    def has_connection(self, arrival_station: Any) -> bool:
-        """
-        TODO
-        """
-        return arrival_station in self.connections
     
-    def get_connection(self, arrival_station: str) -> Any:
+    def get_connection(self) -> Any:
         """
         TODO
         """
-        if self.has_connection:
-            return self.connections[arrival_station]
-        else:
-            return None
+        print(self.connections)
+        return self.connections
 
     # BUG: bij 1 station is de output: Dordrecht: (Rotterdam Centraal: 17, ) Met een spatie teveel.
     def __str__(self):
