@@ -1,10 +1,17 @@
+#import from libraries
 from typing import Any
-from station import Station
+import sys
+from sys import argv
+
+#import from classes
+sys.path.append('code')
+from code import *
+from classes import *
+from classes.station import Station
+
 #from railnetwork import Railnetwork
 
 if __name__ == '__main__':
-
-    from sys import argv
 
     # Check command line arguments
     if len(argv) not in [1,2]:

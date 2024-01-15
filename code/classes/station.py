@@ -1,5 +1,9 @@
-from connection import Connection
+# import from libraries
+import pandas as pd
 import random
+
+# import from classes
+from classes.connection import Connection
 
 class Station():
     """
@@ -27,55 +31,31 @@ class Station():
         pre: filename of railway data is specified
         post: stations and distances are all loaded into memory and connected
         """
-        with open(filename, 'r') as csv_file:
-            # Skip the header line
-            csv_file.readline()
+  
+        # Read the CSV file into a DataFrame
+        df = pd.read_csv(filename)
 
-            # TODO use panda to load csv_file instead of while true loop
-            # Loading stations connections
-            while True:
-                
-                lines = csv_file.readline().strip()
-                data = lines.split(',')
-                if not lines:
-                    break
-                departure_station = data[0]
-                arrival_station = data[1]
-                distance = data[2]
-                #TEST STATEMENT print(data)
+        # Iterate through the rows of the DataFrame
+        for index, row in df.iterrows():
+            departure_station = row['station1']
+            arrival_station = row['station2']
+            distance = row['distance']
 
-                if departure_station not in self.stations:
-                    # als departure niet in self.stations is, dan departure station toevoegen
-                    # als departure wel in self.stations, dan arrival_station en distance toevoegen aan trajctory
-                    # class onder departure station
-                    
-                    self.stations[departure_station] = Connection(arrival_station, distance)
-                else:
-                    connection = Connection(arrival_station, distance)
-                    self.stations[departure_station].update_connection(arrival_station, distance)
-                
-                # Omdat alle trajecten beide kanten omgaan, draaien we de arrivals en departures om, zodat elk station alle connecties heeft opgeslagen
-                departure_station = data[1]
-                arrival_station = data[0]
-                distance = data[2]
-                
+            if departure_station not in self.stations:
+                self.stations[departure_station] = Connection(arrival_station, distance)
+            else:
+                connection = Connection(arrival_station, distance)
+                self.stations[departure_station].update_connection(arrival_station, distance)
 
-                if departure_station not in self.stations:
-                    # als departure niet in self.stations is, dan departure station toevoegen
-                    # als departure wel in self.stations, dan arrival_station en distance toevoegen aan trajctory
-                    # class onder departure station
-                    
-                    self.stations[departure_station] = Connection(arrival_station, distance)
-                else:
-                    connection = Connection(arrival_station, distance)
-                    self.stations[departure_station].update_connection(arrival_station, distance)
-                
-            # BUG deze asserts moeten verander worden en anders!
-            #assert self.stations['Alkmaar'].arrival_station == 'Hoorn'
-            #assert self.stations['Alkmaar'].arrival_station == 'Den Helder'
-            #assert self.stations['Alkmaar'].distance == '36'
-            #print(self.stations['Alkmaar'].arrival_station)    
+            # Swap departure_station and arrival_station for the reverse connection
+            departure_station, arrival_station = arrival_station, departure_station
 
+            if departure_station not in self.stations:
+                self.stations[departure_station] = Connection(arrival_station, distance)
+            else:
+                connection = Connection(arrival_station, distance)
+                self.stations[departure_station].update_connection(arrival_station, distance)
+        
     def print_station_overview(self) -> None:
         """
         For logic purposes if you want to see the overview of all connections
