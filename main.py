@@ -7,7 +7,8 @@ from sys import argv
 sys.path.append('code')
 from code import *
 from classes import *
-from classes.station import Station
+from classes.station2 import Station2
+from classes.load import Load
 
 #from railnetwork import Railnetwork
 
@@ -26,21 +27,20 @@ if __name__ == '__main__':
 
 
     # Create connections
-    rail_nl = Station(level_name)
+    rail_nl = Load(level_name)
 
-    #TEST STATEMENT rail_nl.print_station_overview()
     print('Welcome to RailNL.\n')
 
 
-    train_1 = rail_nl.generate_trajectory()
+    #train_1 = rail_nl.generate_trajectory()
     #TEST STATEMENT print(train_1)
-    train_2 = rail_nl.generate_trajectory()
-    train_3 = rail_nl.generate_trajectory()
+    #train_2 = rail_nl.generate_trajectory()
+    #train_3 = rail_nl.generate_trajectory()
 
     #TEST STATEMENT print('train, stations')
-    print("trein,stations")
-    print(f'train_1, "{train_1}"')
-    print(f'train_2, "{train_2}"')  
-    print(f'train_3, "{train_3}"')
+    #print("trein,stations")
+    #print(f'train_1, "{train_1}"')
+    #print(f'train_2, "{train_2}"')  
+    #print(f'train_3, "{train_3}"')
 
 
