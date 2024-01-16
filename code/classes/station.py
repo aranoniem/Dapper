@@ -1,4 +1,4 @@
-class Station2:
+class Station:
     
     def __init__(self, id, name, latitude, longitude) -> None:
         """

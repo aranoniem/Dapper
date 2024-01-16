@@ -2,7 +2,7 @@
 import pandas as pd
 
 # import classes
-from classes.station2 import Station2
+from classes.station import Station
 
 class Load():
 
@@ -37,9 +37,9 @@ class Load():
             latitude = row['y']
             longitude = row['x']
 
-            self.objects[_station] = Station2(id, _station, latitude, longitude)
+            self.objects[_station] = Station(id, _station, latitude, longitude)
             #TEST
-            print(Station2(id, _station, latitude, longitude))
+            print(Station(id, _station, latitude, longitude))
 
             id += 1
 
@@ -47,7 +47,7 @@ class Load():
 
     def load_connections(self, filename) -> dict:
         """
-        Parses information into memory
+        Load connections into memory
 
         Pre: filename of railway data is specified
         Post: stations and distances are all loaded into memory and connected
@@ -65,9 +65,6 @@ class Load():
             # Connecting both stations to each other, with the distance between them (tuples)
             self.objects[departure_station].add_connection(arrival_station, distance)
             self.objects[arrival_station].add_connection(departure_station, distance)
-
-            #TEST
-            print(self.objects[departure_station])
 
         return self.objects
 
