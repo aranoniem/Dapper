@@ -30,7 +30,11 @@ if __name__ == '__main__':
     rail_nl = Load(level_name)
 
     print('Welcome to RailNL.\n')
-
+    
+    # Usage example:
+    level = 1
+    loader = Load(level_name)
+    loader.print_bitgraph()
 
     #train_1 = rail_nl.generate_trajectory()
     #TEST STATEMENT print(train_1)

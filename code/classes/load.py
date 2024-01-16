@@ -1,4 +1,3 @@
-#import libraries
 import pandas as pd
 
 # import classes
@@ -9,14 +8,15 @@ class Load():
     def __init__(self, level) -> None:
         """
         Load stations, connections between stations, and coordinates of stations.
-        
+
         Pre: part of filename of railwaydata is specified.
         Post: all data (stations, connections, coordinates) from csv is loaded into memory.
         """
         self.objects = {}
+        self.bitgraph = {}  
+
         self.load_stations(f'data/Stations{level}.csv')
         self.load_connections(f'data/Connecties{level}.csv')
-        
 
     def load_stations(self, filename) -> dict:
         """
@@ -38,9 +38,7 @@ class Load():
             longitude = row['x']
 
             self.objects[_station] = Station2(id, _station, latitude, longitude)
-            #TEST
-            print(Station2(id, _station, latitude, longitude))
-
+            self.bitgraph[_station] = {}  # Initialize nested dictionary for the station
             id += 1
 
         return self.objects
@@ -66,9 +64,12 @@ class Load():
             self.objects[departure_station].add_connection(arrival_station, distance)
             self.objects[arrival_station].add_connection(departure_station, distance)
 
-            #TEST
-            print(self.objects[departure_station])
+            # Add edge to the bitgraph (nested dictionary)
+            self.bitgraph[departure_station][arrival_station] = 0
 
         return self.objects
 
-            
+    def print_bitgraph(self):
+        print("Bitgraph:")
+        for station, connections in self.bitgraph.items():
+            print(f"{station}: {connections}")
