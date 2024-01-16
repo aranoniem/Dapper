@@ -9,11 +9,13 @@ class Load():
     def __init__(self, level) -> None:
         """
         Load stations, connections between stations, and coordinates of stations.
-        
+
         Pre: part of filename of railwaydata is specified.
         Post: all data (stations, connections, coordinates) from csv is loaded into memory.
         """
         self.objects = {}
+        self.bitgraph = {}  
+
         self.load_stations(f'data/Stations{level}.csv')
         self.load_connections(f'data/Connecties{level}.csv')
         
@@ -37,10 +39,8 @@ class Load():
             latitude = row['y']
             longitude = row['x']
 
-            self.objects[_station] = Station(id, _station, latitude, longitude)
-            #TEST
-            print(Station(id, _station, latitude, longitude))
-
+            self.objects[_station] = Station2(id, _station, latitude, longitude)
+            self.bitgraph[_station] = {}  # Initialize nested dictionary for the station
             id += 1
 
         return self.objects
