@@ -11,7 +11,6 @@ class Score(object):
 
         # Initialise set, to prevent duplicates
         self.ridden_tracks = set()
-        self.time = 0
 
     def individual_tracks(self, trajectories):
         """
@@ -36,7 +35,7 @@ class Score(object):
                 self.ridden_tracks.add(journey)
 
 
-    def calculate_score(self, trajectories) -> float:
+    def calculate_score(self, trajectories, time) -> float:
         """
         Calculates score of the quality of the railnetwork
 
@@ -49,8 +48,8 @@ class Score(object):
         # Calculate p-value
         p = self.calc_p(trajectories)
 
-        # Calculate T-value
-        T = self.calc_T(trajectories)
+        # the total amount of minutes in all trajectories
+        T = time
 
         # Calculate time of all trajectories
         Min = self.calc_min(trajectories)
@@ -76,23 +75,6 @@ class Score(object):
         post: returns integer
         """
         return len(trajectories)
-
-    def calc_min(self, trajectories) -> int:
-        """
-        Calculates the total amount of minutes in all trajectories
-
-        post: returns integer
-        """
-        self.time = 0
-
-         # Iterate over list of trajectories
-        for trajectory in trajectories:
-
-            # Iterate over stations within a trajectory
-            for i in range (len(trajectory) - 1):
-                departure_station = trajectory[i]
-                arrival_station = trajectory[i+1]
-                minutes = departure_station.get_distance(arrival_station)
-                self.time += minutes
+        
 
 
