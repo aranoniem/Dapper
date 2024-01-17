@@ -1,9 +1,10 @@
-from track import Tracks
+
+from classes.load import Load
 
 class Score(object):
     """Calculate railnetwork quality score"""
 
-    def __init__(self, level):
+    def __init__(self, level, trajectories, time):
         """Initialiser"""
         # Load data about tracks
         self.tracks = Load(level).tracks
@@ -11,6 +12,7 @@ class Score(object):
 
         # Initialise set, to prevent duplicates
         self.ridden_tracks = set()
+        self.calculate_score(trajectories, time)
 
     def individual_tracks(self, trajectories):
         """
@@ -35,7 +37,7 @@ class Score(object):
                 self.ridden_tracks.add(journey)
 
 
-    def calculate_score(self, trajectories, time) -> float:
+    def calculate_score(self, trajectories, Min) -> float:
         """
         Calculates score of the quality of the railnetwork
 
@@ -43,20 +45,21 @@ class Score(object):
         post: returns score as a float
         """
         # Put indivual tracks into set
-        individual_tracks(trajectories)
+        self.individual_tracks(trajectories)
 
         # Calculate p-value
-        p = self.calc_p(trajectories)
+        p = self.calc_p()
+        # TEST: print(self.ridden_tracks)
+        #print("\n")
+        #print(f"{self.tracks} , x")
+        #print(p)
 
         # the total amount of minutes in all trajectories
-        T = time
-
-        # Calculate time of all trajectories
-        Min = self.calc_min(trajectories)
+        T = self.calc_T(trajectories)
 
         # Formula for railnetwork quality
-        K = p * 10000 - (T*100 + Min)
-        return K
+        self.K = p * 10000 - (T*100 + Min)
+        return self.K
 
     def calc_p(self) -> float:
         """
@@ -75,6 +78,9 @@ class Score(object):
         post: returns integer
         """
         return len(trajectories)
+    
+    def __str__(self):
+        return f"{self.K}"
         
 
 

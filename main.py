@@ -5,10 +5,8 @@ from sys import argv
 
 #import from classes
 sys.path.append('code')
-from code import *
-from classes import *
-from classes.station2 import Station2
-from classes.load import Load
+from code.classes.load import Load
+from code.algorithms.random import Random
 
 #from railnetwork import Railnetwork
 
@@ -34,7 +32,9 @@ if __name__ == '__main__':
     # Usage example:
     level = 1
     loader = Load(level_name)
-    loader.print_bitgraph()
+    algoritme = Random(level_name, 3, 120)
+    
+
 
     #train_1 = rail_nl.generate_trajectory()
     #TEST STATEMENT print(train_1)
@@ -46,5 +46,7 @@ if __name__ == '__main__':
     #print(f'train_1, "{train_1}"')
     #print(f'train_2, "{train_2}"')  
     #print(f'train_3, "{train_3}"')
+
+
 
 

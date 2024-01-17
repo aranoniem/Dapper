@@ -15,7 +15,7 @@ class Load():
         """
         self.objects = {}
         self.bitgraph = {}
-        self.tracks = {} 
+        self.tracks = set() 
 
         self.load_stations(f'data/Stations{level}.csv')
         self.load_connections(f'data/Connecties{level}.csv')
@@ -41,9 +41,11 @@ class Load():
             latitude = row['y']
             longitude = row['x']
 
-            self.objects[_station] = Station2(id, _station, latitude, longitude)
+            self.objects[_station] = Station(id, _station, latitude, longitude)
             self.bitgraph[_station] = {}  # Initialize nested dictionary for the station
             id += 1
+
+        #test print(self.objects)
 
         return self.objects
 
@@ -67,6 +69,7 @@ class Load():
             # Connecting both stations to each other, with the distance between them (tuples)
             self.objects[departure_station].add_connection(arrival_station, distance)
             self.objects[arrival_station].add_connection(departure_station, distance)
+            #TEST print(self.objects[departure_station])
 
         return self.objects
 
@@ -83,10 +86,12 @@ class Load():
             distance = row['distance']
 
             # Sort the stations alphabetically
-            sorted_stations = sorted([departure_station, arrival_station])
+            sorted_stations = (departure_station, arrival_station)
+            sorted_stations = tuple(sorted(sorted_stations))
 
             # Connecting both stations to each other, with the distance between them (tuples)
-            self.tracks[sorted_stations[0]].add_track(sorted_stations[1])
+            self.tracks.add(sorted_stations)
+            #TEST STATEMENT print(self.tracks[sorted_stations[0]], sorted_stations[0])
 
         return self.tracks
 
