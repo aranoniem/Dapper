@@ -14,10 +14,12 @@ class Load():
         Post: all data (stations, connections, coordinates) from csv is loaded into memory.
         """
         self.objects = {}
-        self.bitgraph = {}  
+        self.bitgraph = {}
+        self.tracks = {} 
 
         self.load_stations(f'data/Stations{level}.csv')
         self.load_connections(f'data/Connecties{level}.csv')
+        self.load_tracks(f'data/Connecties{level}.csv')
         
 
     def load_stations(self, filename) -> dict:
@@ -67,5 +69,25 @@ class Load():
             self.objects[arrival_station].add_connection(departure_station, distance)
 
         return self.objects
+
+    def load_tracks(self, filename) -> dict:
+        """Calculate number of used tracks"""
+        # Read the CSV file
+
+        df = pd.read_csv(filename)
+
+        # Iterate through the rows
+        for index, row in df.iterrows():
+            departure_station = row['station1']
+            arrival_station = row['station2']
+            distance = row['distance']
+
+            # Sort the stations alphabetically
+            sorted_stations = sorted([departure_station, arrival_station])
+
+            # Connecting both stations to each other, with the distance between them (tuples)
+            self.tracks[sorted_stations[0]].add_track(sorted_stations[1])
+
+        return self.tracks
 
             

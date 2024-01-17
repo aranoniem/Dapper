@@ -15,25 +15,9 @@ class Tracks:
         self.departure_station = departure_station
         self.arrival_station = arrival_station
         self.tracks = {}
+        self.trajectories = []
 
     def add_track(self, departure_station, arrival_station) -> None:
         """Add track to dictionary"""
-        self.tracks[departure_station] = arrrival_station
-
-    def all_tracks(self):
-        return len(self.tracks)
-
-    def used_tracks(trajectory):
-        """
-        Keeps a record of ridden tracks
-
-        pre: trajectory to check and add to list
-        post: bool
-        """
-        trajectories = []
-
-        if trajectory in trajectories:
-            return True
-        trajectories.append(trajectory)
-        return True
+        self.tracks[departure_station] = arrival_station
 
