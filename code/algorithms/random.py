@@ -8,20 +8,36 @@ from code.classes.station import Station
 from code.classes.score import Score
 
 class Random():
+    """
+    create a solution based on making random trajectories and calculate their quality
 
-    def __init__(self, level, max_trajectory: int, timeframe: int):
-        #import the station objects
+    pre: choose a level, a maximum amount of trajectories and a timeframe
+    post: return the railnetwork of the outcome and a quality score
+    """
+
+    def __init__(self, level: str):
+        """
+        Initalize the algorithm and load all station objects
+
+        pre: use the Load class
+        post: a dictionary with all objects is initialized
+        """
+
         self.data = Load(level).objects
-        self.max_trajectory = max_trajectory
-        self.timeframe = timeframe
-        self.level = level
-        self.random()
-        
 
-    def random(self) -> Any:
+        
+    def solve(self, max_trajectory: int, timeframe: int) -> Any:
+        """
+        Create a random railnetwork and calculate their score
+
+        pre: choose a level, a maximum amount of trajectories and a timeframe
+        post: returns a random railnetwork and their quality score
+        """
         railnetwork = []
         total_time = 0
-        for i in range(self.max_trajectory):
+
+        #create trajectories for the amount chosen 
+        for i in range(max_trajectory):
             station = self.random_station(self.data)
             trajectory = [station]
             visited_stations = {station}
@@ -40,27 +56,37 @@ class Random():
                     # Choose a random unvisited neighbor
                     random_neighbour = random.choice(unvisited_neighbours)
 
+                #stop making connections when timeframe is reached
                 duration += self.data[station].get_distance(random_neighbour)
-                if duration > self.timeframe:
+                if duration > timeframe:
                     break
 
+                #add station to trajectory
                 trajectory.append(random_neighbour)
+
+                #remember stations that are visited in trajectory
                 visited_stations.add(random_neighbour)
                 station = random_neighbour
             
-            total_time += duration
+            #add trajectory to railnetwork
             railnetwork.append(trajectory)
+
+            #add time to total time of railnetwork
+            total_time += duration
+            
+
         #show the trajectory of the random algorithm
         print(railnetwork)
-        K = Score(self.level, railnetwork, self.timeframe)
-        print(K)
-        return K
+        Quality_score = Score(self.level, railnetwork, timeframe)
+        print(Quality_score)
+        return Quality_score
     
 
     def random_station(self, data: dict): 
         """
         find a random station for the purpose of a starting point
 
+        pre: enter the data that a random station is picked from
         post: returns a random station
         """
         random_station = random.choice(list(data.keys()))
@@ -75,18 +101,13 @@ class Random():
         """
         neighbours = list(data[station].get_connections())
 
+        #if their are more connections, choose a random one
         if len(neighbours) > 1:
             random_index = random.randint(1, len(neighbours))
             #TEST STATEMENT print(random_index)
             random_neighbour = neighbours[random_index - 1]
             #TEST STATEMENT print(random_neighbour)
+        #if there is only one connection, make that one
         else:
             random_neighbour = neighbours[0]
         return random_neighbour
-
-    
-
-        
-
-
-
