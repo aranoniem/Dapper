@@ -2,6 +2,9 @@
 from typing import Any
 import sys
 from sys import argv
+import matplotlib.pyplot as plt
+import os
+import csv
 
 #import from classes
 sys.path.append('code')
@@ -30,10 +33,38 @@ if __name__ == '__main__':
     print('Welcome to RailNL.\n')
     
     # Usage example:
-    level = 1
     loader = Load(level_name)
-    algoritme = Random(level_name, 3, 120)
+    random = Random(level_name)
     
+    results = [random.solve(7, 120) for _ in range(10000)]
+    print(results)
+
+    
+    # Create a directory called 'images' if it doesn't exist
+    output_directory = 'plots'
+    os.makedirs(output_directory, exist_ok=True)
+
+    output_path = os.path.join(output_directory, 'histogram_10000_random.png')
+    plt.hist(results, bins=50, edgecolor='black', linewidth=1.2)  # Adjust bins and linewidth
+    plt.title('Histogram of Algorithm Results')
+    plt.xlabel('Score')
+    plt.ylabel('Frequency')
+    plt.savefig(output_path)
+
+    # Print the path where the image is saved
+    print(f"Histogram saved at: {output_path}")
+
+    # Create a directory called 'result_csv' if it doesn't exist
+    output_csv_directory = 'result_csv'
+    os.makedirs(output_csv_directory, exist_ok=True)
+
+    # Save the results in a CSV file
+    output_csv_path = os.path.join(output_csv_directory, 'results_10000_random.csv')
+    with open(output_csv_path, 'w', newline='') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(['Result'])  # Write header
+        csvwriter.writerows([[result] for result in results])  # Write results
+        
 
 
     #train_1 = rail_nl.generate_trajectory()

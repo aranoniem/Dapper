@@ -24,9 +24,10 @@ class Random():
         """
 
         self.data = Load(level).objects
+        self.level = level
 
         
-    def solve(self, max_trajectory: int, timeframe: int) -> Any:
+    def solve(self, max_trajectory: int, timeframe: int) -> float:
         """
         Create a random railnetwork and calculate their score
 
@@ -76,10 +77,10 @@ class Random():
             
 
         #show the trajectory of the random algorithm
-        print(railnetwork)
-        Quality_score = Score(self.level, railnetwork, timeframe)
-        print(Quality_score)
-        return Quality_score
+        #print(railnetwork)
+        quality_score = Score(self.level, railnetwork, timeframe)
+        #print(quality_score)
+        return float(quality_score.K)
     
 
     def random_station(self, data: dict): 
