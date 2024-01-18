@@ -4,7 +4,7 @@ from classes.load import Load
 class Score(object):
     """Calculate railnetwork quality score"""
 
-    def __init__(self, level: str, trajectories: list, time: integer) -> None:
+    def __init__(self, level: str, trajectories: list, time: int) -> None:
         """Initialiser"""
         # Load data about tracks
         self.tracks = Load(level).tracks

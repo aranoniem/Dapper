@@ -7,7 +7,7 @@ from code.classes.load import Load
 from code.classes.station import Station
 from code.classes.score import Score
 
-class Random():
+class Totally_random():
     """
     create a solution based on making random trajectories and calculate their quality
 
@@ -72,6 +72,7 @@ class Random():
         #show the trajectory of the random algorithm
         #print(railnetwork)
         quality_score = Score(self.level, railnetwork, timeframe)
+        print(quality_score)
         #print(quality_score)
         return float(quality_score.K)
     

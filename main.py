@@ -9,7 +9,7 @@ import csv
 #import from classes
 sys.path.append('code')
 from code.classes.load import Load
-from code.algorithms.random import Random
+from code.algorithms.totally_random import Totally_random
 
 #from railnetwork import Railnetwork
 
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     
     # Usage example:
     loader = Load(level_name)
-    random = Random(level_name)
+    random = Totally_random(level_name)
     
     results = [random.solve(7, 120) for _ in range(10000)]
     print(results)
