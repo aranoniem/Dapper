@@ -4,17 +4,17 @@ from classes.load import Load
 class Score(object):
     """Calculate railnetwork quality score"""
 
-    def __init__(self, level, trajectories, time):
+    def __init__(self, level: str, trajectories: list, time: integer) -> None:
         """Initialiser"""
         # Load data about tracks
         self.tracks = Load(level).tracks
         self.station = Load(level).objects
 
         # Initialise set, to prevent duplicates
-        self.ridden_tracks = set()
+        self.ridden_tracks: set[str] = set()
         self.calculate_score(trajectories, time)
 
-    def individual_tracks(self, trajectories):
+    def individual_tracks(self, trajectories: list) -> set:
         """
         Keep record of individual ridden tracks, without duplicates
 
@@ -36,8 +36,10 @@ class Score(object):
                 # Add tuple to set
                 self.ridden_tracks.add(journey)
 
+        return self.ridden_tracks
 
-    def calculate_score(self, trajectories, Min) -> float:
+
+    def calculate_score(self, trajectories: list, Min: int) -> float:
         """
         Calculates score of the quality of the railnetwork
 
