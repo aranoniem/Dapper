@@ -36,7 +36,7 @@ if __name__ == '__main__':
     loader = Load(level_name)
     random = Totally_random(level_name)
     
-    results = [random.solve(7, 120) for _ in range(10000)]
+    results = [random.solve(7, 120) for _ in range(100)]
     print(results)
 
     
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     output_directory = 'plots'
     os.makedirs(output_directory, exist_ok=True)
 
-    output_path = os.path.join(output_directory, 'histogram_10000_random.png')
+    output_path = os.path.join(output_directory, 'histogram_100_random.png')
     plt.hist(results, bins=50, edgecolor='black', linewidth=1.2)  # Adjust bins and linewidth
     plt.title('Histogram of Algorithm Results')
     plt.xlabel('Score')
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     os.makedirs(output_csv_directory, exist_ok=True)
 
     # Save the results in a CSV file
-    output_csv_path = os.path.join(output_csv_directory, 'results_10000_random.csv')
+    output_csv_path = os.path.join(output_csv_directory, 'results_100_random.csv')
     with open(output_csv_path, 'w', newline='') as csvfile:
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow(['Result'])  # Write header
