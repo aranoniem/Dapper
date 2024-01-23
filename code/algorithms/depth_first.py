@@ -50,16 +50,34 @@ class DepthFirst():
         return random_station
 
     def get_next_station(self):
-        print(f'(next_station) de totale stack:',self.stack, '\n')
+        print(f'L53; de totale stack:',self.stack, '\n')
         return self.stack.pop()
 
-    def generate_children(self, stack_station, stack_connections):
-        print(f'(generate), station:', stack_station, '\n')
-        children = []
-        for connection in stack_connections:
-            new_station = [copy.deepcopy(stack_station)]
-            new_station.append(connection)
+    def generate_children(self, stack_station):
+        print(f'L57 station:', stack_station, '\n')
+        if isinstance(stack_station, list):
+            new_station = copy.deepcopy(stack_station)
             self.stack.append(new_station)
+            _station = stack_station[-1] #!!!! let op met breadth first. verdeel get_next_station in twee.
+        else:
+            _station = stack_station
+
+        print(f'L64', _station)
+
+        # Get connections for the current station
+        stack_connections = self.data[_station].get_connections()
+
+        for connection in stack_connections:
+            children = []
+            #new_station = copy.deepcopy(stack_station)
+            if isinstance(stack_station, list):
+                for item in stack_station:
+                    children.append(item)
+            else:
+                children.append(stack_station)
+            children.append(connection)
+            print(f'L74', children)
+            self.stack.append(children)
 
     def calculate_time(trajectory):
         """
@@ -78,27 +96,22 @@ class DepthFirst():
         # Initialise a list to store trajectories
         trajectories = []
 
+        depth = 2
+        i = 0
         # Repeat until the desired number of trajectories is reached  or stack is empty (empty list == false)
-        while self.stack:
+        while self.stack and i < depth:
 
             # Get top of the stack
             stack_station = self.get_next_station()
-            print("Current stack station:", stack_station)
+            print("L98, Current stack station:", stack_station)
             # Choose next connection
-            stack_connections = self.data[stack_station].get_connections()
 
-            # If we have (a) connection(s):
-            if stack_connections:
-                print(f'run, connecties:', stack_connections)
-                self.generate_children(stack_station, stack_connections)
-                print('is door generate children gerund \n')
-            else:
-                current_stack = self.stack
-                print(f'current stack is {current_stack}')
-                return current_stack
-                # dit klopt niet denk ik, in principe is deze dus leeg. kijk naar ontwerp
-                # gebruik van solve en run?? misschien stack niet lijst van lijst, maar 
-                # elk traject 1 lijst en dan weer weg. check ook github
+            self.generate_children(stack_station)
+            print('L106, is door generate children gerund \n')
+            i += 1
+
+        stack = self.stack
+        return stack
 
     def solve(self, max_trajectory: int, timeframe: int) -> float:
         """
@@ -117,11 +130,5 @@ class DepthFirst():
             # Check if results is not None (no trajectory found)
             if result is None:
                 continue # Try again with a new random starting point
-            print(f'result = {result}')
-            # Calculate the total time for the entire trajectory
-            total_time = calculate_time(result)
-            print(f'totale tijd = {total_time}')
+            print(f'L.135, result = {result}')
 
-        # iterate over stack, calculate times and see which are under timeframe? 
-        # or incorporate it into run(), and then take the longest trajectories in the stack
-        # hoe ziet een stack eruit, is dit een lijst van lijsten??
