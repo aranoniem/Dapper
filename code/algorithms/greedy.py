@@ -1,14 +1,14 @@
 import random
-import random
 from code.classes.load import Load
 from code.classes.station import Station
 from code.classes.score import Score
 
 class GreedySearch:
-    def __init__(self, level, timeframe, max_time):
+    def __init__(self, level, timeframe, max_time, num_colors):
         """
-        Retrieves file name, the maximum allowed time per route, and the amount of routes to be made(timeframe), also loads in the connections between stations,
-        furthermore the class initializes a trajectories list to keep track of found trajectories and it initializes a total time counter for the score calculation.
+        Retrieves file name, the maximum allowed time per route, and the amount of routes to be made (timeframe),
+        also loads in the connections between stations. Initializes a trajectories list to keep track of found trajectories,
+        initializes a total time counter for the score calculation, and sets the number of colors for trajectories.
         """
         self.level = level
         self.max_time = max_time
@@ -18,22 +18,21 @@ class GreedySearch:
         self.trajectories = []
 
     @classmethod
-    def solve(cls, level, timeframe, max_time):
+    def solve(cls, level, timeframe, max_time, num_colors):
         """
-        makes it so the GreedySearch function can be called with GreedySearch.solve(<arguments>) for ease of use
+        Makes it so the GreedySearch function can be called with GreedySearch.solve(<arguments>) for ease of use.
         """
-        instance = cls(level, timeframe, max_time)
+        instance = cls(level, timeframe, max_time, num_colors)
         instance._solve()
         return instance
 
     def _solve(self):
         """
-        generates (timeframe) routes and adds the routes to the list of routes
+        Generates (timeframe) routes and adds the routes to the list of routes.
         """
-        
         for i in range(self.timeframe):
             route = self._generate_route()
-            self._update_trajectories(route)
+            self._update_trajectories(route, i)
 
         self._calculate_and_print_score()
 
@@ -50,7 +49,7 @@ class GreedySearch:
         while total_time <= self.max_time:
             next_station = self._choose_next_station(current_station, visited_stations)
 
-            # if a dead end is reached
+            # If a dead end is reached
             if next_station is None:
                 break
 
@@ -71,31 +70,42 @@ class GreedySearch:
 
     def _choose_next_station(self, current_station, visited_stations):
         """
-        Adds a new station to the route if its the closest neighbour and the station was not visited previously.
+        Adds a new station to the route if it's the closest neighbor and the station was not visited previously.
         """
         connections_list = self.connections[current_station].get_connections()
         unvisited_neighbors = [neighbor for neighbor in connections_list if neighbor not in visited_stations]
 
-        # if a dead end is reached
+        # If a dead end is reached
         if not unvisited_neighbors:
             return None
 
         return min(unvisited_neighbors, key=lambda x: self.connections[current_station].get_distance(x))
 
-    def _update_trajectories(self, route):
+    def _update_trajectories(self, route, current_route):
         """
-        update the list of trajectories by appending the new route
+        Update the list of trajectories by appending the new route and color.
         """
         self.total_time_for_trajectories += sum(self._calculate_total_time(route))
-        self.trajectories.append(route)
+
+        colors = [
+            [0, 0, 1],
+            [0, 1, 0],
+            [0, 1, 1],
+            [1, 0, 0],
+            [1, 0, 1],
+            [1, 1, 0],
+            [1, 1, 1]
+        ]
+
+        self.trajectories.append((route, colors[current_route]))
         print(f"Found route {len(self.trajectories)}: {route}")
 
     def _calculate_total_time(self, route):
         """
-        retrieves the sum of the distances between stations
+        Retrieves the sum of the distances between stations.
         """
         return [self.connections[route[i]].get_distance(route[i + 1]) for i in range(len(route) - 1)]
 
     def _calculate_and_print_score(self):
-        score = Score(self.level, self.trajectories, self.total_time_for_trajectories)
+        score = Score(self.level, [trajectory[0] for trajectory in self.trajectories], self.total_time_for_trajectories)
         print(score)
