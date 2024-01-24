@@ -9,6 +9,7 @@ import csv
 sys.path.append('code')
 from code.classes.load import Load
 from code.algorithms.depth_first import DepthFirst
+from code.algorithms.breadth_first import BreadthFirst
 
 #from railnetwork import Railnetwork
 
@@ -33,10 +34,23 @@ if __name__ == '__main__':
     
     # Usage example:
     loader = Load(level_name)
-    algoritm = DepthFirst(level_name)
+    algoritm = BreadthFirst(level_name)
     algoritm.solve(3, 120)
     
     # results = [random.solve(7, 120) for _ in range(100)]
     #print(results)
-
+    """
+    Resultaten beginstation Amsterdam Sloterdijk,
+    BreadthFirst met een depth van 4.
+    Get next station zelfde
+    [['Amsterdam Sloterdijk', 'Amsterdam Zuid'], 
+    ['Amsterdam Sloterdijk', 'Amsterdam Centraal'], 
+    ['Amsterdam Sloterdijk', 'Amsterdam Centraal', 'Amsterdam Amstel'], 
+    ['Amsterdam Sloterdijk', 'Haarlem'], 
+    ['Amsterdam Sloterdijk', 'Haarlem', 'Beverwijk'], 
+    ['Amsterdam Sloterdijk', 'Haarlem', 'Heemstede-Aerdenhout'], 
+    ['Amsterdam Sloterdijk', 'Zaandam'], 
+    ['Amsterdam Sloterdijk', 'Zaandam', 'Castricum'], 
+    ['Amsterdam Sloterdijk', 'Zaandam', 'Hoorn']]
+    """
 

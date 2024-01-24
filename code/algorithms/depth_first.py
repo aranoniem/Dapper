@@ -1,15 +1,14 @@
 # Import libraries
 from typing import Any
 import copy
+
+#TODO, import random.choice only instead of the whole random module
 import random
 
 # Import classes
 from code.classes.load import Load
 from code.classes.station import Station
 from code.classes.score import Score
-
-# Import functions
-from .semi_random import Random
 
 class DepthFirst():
     """
@@ -28,16 +27,23 @@ class DepthFirst():
         # Get the station data and their connections
         self.data = Load(level).objects
 
+        # Initialise a self for other functions to use the variable
         self.level = level
 
         # Initialise stack for algorithm
         self.stack = []
+        self.trajectories_stack = []
 
         # Get the starting station
-        random_station = self.random_station()
+        #FINAL: random_station = self.random_station()
+        # FOR TESTING PURPOSES: TODO, CHANGE THIS BACK TO RANDOM
+        self.random_station = 'Amsterdam Sloterdijk'
 
         # Add starting station to stack
-        self.stack.append(random_station)
+        self.stack.append(self.random_station)
+
+        # Add starting station to visited stations
+        self.visited_stations = [self.random_station]
 
     def random_station(self): 
         """
@@ -46,39 +52,62 @@ class DepthFirst():
         pre: enter the data that a random station is picked from
         post: returns a random station
         """
-        random_station = random.choice(list(self.data.keys()))
+        random_station = random.choice(list(self.data))
         return random_station
 
     def get_next_station(self):
-        print(f'L53; de totale stack:',self.stack, '\n')
+        print(f'L53; de totale stack:', self.stack, '\n')
         return self.stack.pop()
 
+    def get_last_station(self, stack_station):
+        """ Get last station from given trajectory"""
+        return stack_station[-1]
+
     def generate_children(self, stack_station):
-        #TODO is visited_stations toevoegen en daar mag niet heen gegaan worden.
-        print(f'L57 station:', stack_station, '\n')
+        #TEST
+        print(f'Stack_station:', stack_station, '\n')
+
+        # Check if given variable is one station or a list of multiple
         if isinstance(stack_station, list):
             new_station = copy.deepcopy(stack_station)
-            self.stack.append(new_station)
-            _station = stack_station[-1] #!!!! let op met breadth first. verdeel get_next_station in twee.
+            self.trajectories_stack.append(new_station)
+            _station = self.get_last_station(stack_station)
         else:
             _station = stack_station
 
-        print(f'L64', _station)
+        #TEST
+        print(f'Gekozen station van stack_station', _station)
 
         # Get connections for the current station
         stack_connections = self.data[_station].get_connections()
 
-        for connection in stack_connections:
+        # Filter out the stations that have already been visited
+        unvisited_neighbours = [n for n in stack_connections if n not in self.visited_stations]
+
+        print("toegevoegd aan stack:")
+        # Add each unvisited connection to their own trajectory
+        for connection in unvisited_neighbours:
+
+            # Initialise a list for creation of new trajectory
             children = []
-            #new_station = copy.deepcopy(stack_station)
+
+            # Check if given variable is one station or a list of multiple and add to new trajectory
             if isinstance(stack_station, list):
                 for item in stack_station:
                     children.append(item)
             else:
                 children.append(stack_station)
+            # Add new connection to trajectory
             children.append(connection)
-            print(f'L74', children)
+            
+            # Add station to visited
+            self.visited_stations.append(connection)
+
+            # Add trajectory to stack
             self.stack.append(children)
+            
+            #TEST
+            print(children)
 
     def calculate_time(trajectory):
         """
@@ -97,21 +126,29 @@ class DepthFirst():
         # Initialise a list to store trajectories
         trajectories = []
 
-        depth = 2
+        # runnen zodat elke connectie van start station wordt gerund. dus eigenlijk moet depth 
+        # gelijk zijn aan aantal connecties start station +1 (+1 ivm eerst connecties 
+        # van startstation erin zetten, vervolgens de connecties zelfe.)
+        #starting_station_connections = self.data[self.random_station].get_connections()
+        #print(len(starting_station_connections))
+        #depth = len(starting_station_connections)
+        depth = 4
         i = 0
         # Repeat until the desired number of trajectories is reached  or stack is empty (empty list == false)
         while self.stack and i < depth:
 
             # Get top of the stack
             stack_station = self.get_next_station()
-            print("L98, Current stack station:", stack_station)
+            print("Running stack station:", stack_station)
+            
             # Choose next connection
-
             self.generate_children(stack_station)
-            print('L106, is door generate children gerund \n')
+
+            print('Eind van generate children gerund, iteratie:', i, '\n')
             i += 1
 
-        stack = self.stack
+        for item in self.stack:
+            stack = self.trajectories_stack.append(item)
         return stack
 
     def solve(self, max_trajectory: int, timeframe: int) -> float:
@@ -121,15 +158,17 @@ class DepthFirst():
         pre: choose a level, a maximum amount of trajectories and a timeframe
         post: returns a railnetwork (list: [list]) and their quality score
         """
-        # Initialise a list to store valid trajectories
-        valid_trajectories = []
-        
-        for _ in range(max_trajectory):
-            # Run the depth-first search to generate trajectories
-            result = self.run(timeframe)
-
+        # Run the depth-first search to generate trajectories
+        result = self.run(timeframe)
+        print('L.135, result stack =', result, '\n')
+        print(f'L.164, result trajectories stack = {self.trajectories_stack}')
+        print(f'visited stations: = {self.visited_stations}')
+        #for _ in range(max_trajectory):
             # Check if results is not None (no trajectory found)
-            if result is None:
-                continue # Try again with a new random starting point
-            print(f'L.135, result = {result}')
+            #if result is None:
+            #    continue # Try again with a new random starting point
+            #print(f'L.135, result = {result}')
+
+        for i in range(max_trajectory):
+            pass
 
