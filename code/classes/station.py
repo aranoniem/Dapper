@@ -1,3 +1,5 @@
+from typing import Any
+
 class Station:
     
     def __init__(self, id, name, latitude, longitude) -> None:
@@ -20,7 +22,7 @@ class Station:
         """
         self.connections[connection] = distance
 
-    def get_connections(self) -> None:
+    def get_connections(self) -> list:
         """
         Get distance to a specific destination station
 
@@ -30,7 +32,7 @@ class Station:
         
         return list(self.connections.keys())
 
-    def get_distance(self, arrival_station) -> None:
+    def get_distance(self, arrival_station) -> Any:
         """
         Get distance to a specific destination station
 
