@@ -2,7 +2,6 @@ import csv
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch
 from code.algorithms.greedy import GreedySearch
-from code.classes.load import Load
 from code.classes.station import Station
 
 class Railroadmap:
@@ -46,53 +45,77 @@ class Railroadmap:
 
         return connections
 
-    def plot_locations(self, locations, connections, selected_route, made_connections):
+    def plot_locations(self, locations, connections, made_connections):
+        connection_offsets = {}
+    
         plt.scatter([loc.longitude for loc in locations.values()], [loc.latitude for loc in locations.values()], marker='o', color='red')
     
         for loc in locations.values():
             plt.text(loc.longitude, loc.latitude, loc.name, ha='right', va='bottom', fontsize=8)
+        
+        # loop through each trajectory 
+        for(route, color) in enumerate(self.trajectories):
+            # loop for all the connections in a route
+            for i in range(len(route) - 1):
+                departure_station = route[i]
+                arrival_location = route[i + 1]
+                dep_coords = locations[departure_station]
+                arr_coords = locations[arrival_location]
+                
+                # check if a connection has already made in reverse or normal order so the arrows can be offset to eachother.
+                connection = (departure_station, arrival_location)
+                reversed_connection = (arrival_location, departure_station)
     
-        route_colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink']
-        route_offset = 0.15
+                # Choose the appropriate connection for offset tracking
+                offset_connection = connection if connection in connection_offsets else reversed_connection
     
-        for i, (route, color) in enumerate(self.trajectories):
-            if i == selected_route:
-                for j in range(len(route) - 1):
-                    departure_station = route[j]
-                    arrival_location = route[j + 1]
+                if offset_connection not in connection_offsets:
+                    connection_offsets[offset_connection] = 0
     
-                    # Ensure departure_station is a string
-                    if isinstance(departure_station, list):
-                        departure_station = departure_station[0]
+                # determine the ratio to make the line offset for x and y based on if the line is more vertically aligned or horizontally
+                ratio = (arr_coords.longitude - dep_coords.longitude) / (arr_coords.latitude - dep_coords.latitude)
+                
+                # determine the offset for x and y based on if the line is more horizontally algined or vertically
+                horizontal_offset = 0.008 * connection_offsets[offset_connection] if ratio <= 1 else 0
+                vertical_offset = 0.008 * connection_offsets[offset_connection] if ratio > 1 else 0
+                
+                # increment the offset count to offset the next arrow with the same connection by the right amount
+                connection_offsets[offset_connection] += 1  
     
-                    # Ensure arrival_location is a string
-                    if isinstance(arrival_location, list):
-                        arrival_location = arrival_location[0]
+                # Calculate and print the distance for the current connection only once
+                distance = dep_coords.get_distance(arrival_location)
+                
+                # draw a black line if the connection is not used(doesnt work yet) else draw a coloured line with an x or y offset determined by what route it is
+                if connection in made_connections or reversed_connection in made_connections:
+                    line = FancyArrowPatch((dep_coords.longitude, dep_coords.latitude),
+                        (arr_coords.longitude, arr_coords.latitude),
+                        color='black', arrowstyle='-|>', mutation_scale=10)
+                else:
+                    line = FancyArrowPatch((dep_coords.longitude + horizontal_offset, dep_coords.latitude + vertical_offset),
+                        (arr_coords.longitude + horizontal_offset, arr_coords.latitude + vertical_offset),
+                        color=color, arrowstyle='-|>', mutation_scale=15)
     
-                    dep_coords = locations[departure_station]
-                    arr_coords = locations[arrival_location]
+                plt.gca().add_patch(line)
     
-                    # Introduce an offset based on the route index
-                    offset = i * route_offset
+                text_x = (dep_coords.longitude + arr_coords.longitude) / 2
+                text_y = (dep_coords.latitude + arr_coords.latitude) / 2
     
-                    if (departure_station, arrival_location) in made_connections:
-                        line = FancyArrowPatch((dep_coords.longitude + offset, dep_coords.latitude),
-                            (arr_coords.longitude + offset, arr_coords.latitude),
-                            color='black', arrowstyle='-|>', mutation_scale=15)
-                    else:
-                        line = FancyArrowPatch((dep_coords.longitude + offset, dep_coords.latitude),
-                            (arr_coords.longitude + offset, arr_coords.latitude),
-                            color=color, arrowstyle='-|>', mutation_scale=15)
+                # Ensure a minimum non-zero distance for the text
+                min_text_distance = 0.002
+                text_y = max(text_y, dep_coords.latitude + min_text_distance)
     
-                    plt.gca().add_patch(line)
+                # Retrieve the correct travel time for the current route
+                matching_times = [time for dest, time in connections.get(departure_station, []) if dest == arrival_location]
     
-                    text_x = (dep_coords.longitude + arr_coords.longitude) / 2 + offset
-                    text_y = (dep_coords.latitude + arr_coords.latitude) / 2
+                # Check if there's at least one non-zero travel time for the connection
+                non_zero_times = [float(time) for time in matching_times if float(time) > 0]
     
-                    # Retrieve the correct travel time for the current route using get_distance
-                    current_route_time = connections[departure_station].get_distance(arrival_location)
+                if non_zero_times:
+                    current_route_time = non_zero_times[0]
+                    # Print the time if available
+                    plt.text(text_x, text_y, f"{current_route_time:.2f} mins", ha='center', va='center', fontsize=8, color='black')
     
-                    plt.text(text_x, text_y + 0.002, f"{current_route_time:.2f} mins", ha='center', va='center', fontsize=8, color='black')
+        plt.show()   
 
     def set_plot_limits(self, locations):
         min_lat = min(loc.latitude for loc in locations.values())
@@ -104,35 +127,26 @@ class Railroadmap:
         plt.ylim(min_lat - 0.1, max_lat + 0.1)
         plt.gca().set_aspect('equal', adjustable='box')
 
-    def main(self, level):
-        # Use Load class to load stations, connections, and tracks
-        loader = Load(level)
-        
-        # Access the loaded stations and connections
-        locations = loader.objects
-        connections = loader.load_connections(f'data/Connecties{level}.csv')  # Corrected assignment
-        
-        # Modify this part to use GreedySearch
-        num_colors = 7  
-        greedy_search = GreedySearch.solve(level, 7, 120, num_colors)  # Adjust 'your_level' accordingly
+    def main(self):
+        locations = self.read_locations('data/StationsHolland.csv')
+        connections = self.read_connections('data/ConnectiesHolland.csv')
+
+        num_colors = 7  # Number of different colors for trajectories
+        greedy_search = GreedySearch.solve('Holland', 7, 120, num_colors) 
+
         self.trajectories = greedy_search.trajectories
-        
+
         plt.figure(figsize=(10, 10))
-        selected_route = 0  # Change this to the index of the route you want to display
-        
-        # Access made connections from the Load instance
-        made_connections = loader.load_connections(f'data/Connecties{level}.csv')  
-        
-        self.plot_locations(locations, connections, selected_route, made_connections)
+        self.plot_locations(locations, connections, [(("Delft", "Den Haag Centraal"), 13)])
         self.set_plot_limits(locations)
-        
+
         plt.xlabel('Longitude')
         plt.ylabel('Latitude')
         plt.title('Coordinate Grid of Locations in Holland with Connections and Times')
-        
+
         plt.grid(True)
         plt.show()
 
 if __name__ == "__main__":
     railroad_map = Railroadmap('example', 0.0, 0.0)
-    railroad_map.main("Holland")
+    railroad_map.main()
