@@ -6,15 +6,9 @@ from typing import Any
 from code.classes.load import Load
 from code.classes.station import Station
 from code.classes.score import Score
+from totally_random import Totally_random
 
-class Totally_random():
-    """
-    create a solution based on making random trajectories and calculate their quality
-
-    pre: choose a level, a maximum amount of trajectories and a timeframe
-    post: return the railnetwork of the outcome and a quality score
-    """
-
+class Local_search():
     def __init__(self, level: str):
         """
         Initalize the algorithm and load all station objects
@@ -26,8 +20,30 @@ class Totally_random():
         self.data = Load(level).objects
         self.level = level
 
-        
-    def solve(self, max_trajectory: int, timeframe: int) -> float:
+    def solve(self, timeframe, max_trajectory, max_iterations):
+
+        while iterations <= max_iterations:
+            railnetwork = self.random_startnetwork(timeframe, max_trajectory)
+            new_trajectory = self.random_trajectory(timeframe)
+            temp_railnetwork = railnetwork
+            iterations = 0
+
+            for i in range(max_trajectory):
+                temp_railnetwork[i] = new_trajectory
+                temp_quality_score = Score(self.level, railnetwork, timeframe)
+                if temp_quality_score > quality_score:
+                    quality_score = temp_quality_score 
+                    railnetwork = temp_railnetwork
+                    print(railnetwork)
+                    iterations = 0
+                else:
+                    iterations += 1
+                    temp_railnetwork = railnetwork
+                    print(temp_railnetwork)
+
+        return quality_score
+
+    def random_startnetwork(self, timeframe, max_trajectory):
         """
         Create a random railnetwork and calculate their score
 
@@ -35,7 +51,6 @@ class Totally_random():
         post: returns a random railnetwork and their quality score
         """
         railnetwork = []
-        total_time = 0
 
         #create trajectories for the amount chosen 
         for i in range(random.randint(1, max_trajectory)):
@@ -64,15 +79,32 @@ class Totally_random():
             #add trajectory to railnetwork
             railnetwork.append(trajectory)
 
-            #add time to total time of railnetwork
-            total_time += duration
-            
-        #show the trajectory of the random algorithm
-        #print(railnetwork)
-        quality_score = Score(self.level, railnetwork, total_time)
-        #print(quality_score)
-        return float(quality_score.K)
+        return railnetwork
     
+    def random_trajectory(self, timeframe):
+        station = self.random_station(self.data)
+        trajectory = [station]
+        visited_stations = {station}
+        duration = 0
+
+        while True:
+            neighbours = self.data[station].get_connections()
+            
+            random_neighbour = random.choice(neighbours)
+
+            #stop making connections when timeframe is reached
+            duration += self.data[station].get_distance(random_neighbour)
+            if duration > timeframe:
+                break
+
+                #add station to trajectory
+            trajectory.append(random_neighbour)
+
+                #remember stations that are visited in trajectory
+            visited_stations.add(random_neighbour)
+            station = random_neighbour
+
+        return trajectory    
 
     def random_station(self, data: dict): 
         """
@@ -82,24 +114,6 @@ class Totally_random():
         post: returns a random station
         """
         random_station = random.choice(list(data.keys()))
-        return random_station
+        return random_station        
 
-    def random_connection(self, data: dict, station: str):
-        """
-        find a random connection for the purpose of making a trajectory
-
-        pre: enter a departure station
-        post: returns a station connected with the departure station 
-        """
-        neighbours = list(data[station].get_connections())
-
-        #if their are more connections, choose a random one
-        if len(neighbours) > 1:
-            random_index = random.randint(1, len(neighbours))
-            #TEST STATEMENT print(random_index)
-            random_neighbour = neighbours[random_index - 1]
-            #TEST STATEMENT print(random_neighbour)
-        #if there is only one connection, make that one
-        else:
-            random_neighbour = neighbours[0]
-        return random_neighbour
+    
