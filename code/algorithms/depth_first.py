@@ -54,6 +54,7 @@ class DepthFirst():
         return self.stack.pop()
 
     def generate_children(self, stack_station):
+        #TODO is visited_stations toevoegen en daar mag niet heen gegaan worden.
         print(f'L57 station:', stack_station, '\n')
         if isinstance(stack_station, list):
             new_station = copy.deepcopy(stack_station)
