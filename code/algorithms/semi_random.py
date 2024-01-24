@@ -7,7 +7,7 @@ from code.classes.load import Load
 from code.classes.station import Station
 from code.classes.score import Score
 
-class Random():
+class Semi_random():
     """
     create a solution based on making random trajectories and calculate their quality
 
@@ -38,7 +38,7 @@ class Random():
         total_time = 0
 
         #create trajectories for the amount chosen 
-        for i in range(max_trajectory):
+        for i in range(random.randint(1, max_trajectory)):
             station = self.random_station(self.data)
             trajectory = [station]
             visited_stations = {station}
@@ -78,7 +78,9 @@ class Random():
 
         #show the trajectory of the random algorithm
         #print(railnetwork)
-        quality_score = Score(self.level, railnetwork, timeframe)
+        print(f"{railnetwork}, {total_time}")
+        quality_score = Score(self.level, railnetwork, total_time)
+        print(quality_score)
         #print(quality_score)
         return float(quality_score.K)
     

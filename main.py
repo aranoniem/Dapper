@@ -5,11 +5,15 @@ from sys import argv
 import matplotlib.pyplot as plt
 import os
 import csv
+import seaborn as sns
+from seaborn import kdeplot
 
 #import from classes
 sys.path.append('code')
 from code.classes.load import Load
 from code.algorithms.totally_random import Totally_random
+from code.algorithms.semi_random import Semi_random
+from code.algorithms.greedy import GreedySearch
 
 #from railnetwork import Railnetwork
 
@@ -34,32 +38,44 @@ if __name__ == '__main__':
     
     # Usage example:
     loader = Load(level_name)
-    random = Totally_random(level_name)
+    semi_random = Semi_random(level_name)
+    totally_random = Totally_random(level_name)
+    greedy = GreedySearch(level_name, 7, 120, 4)
     
-    results = [random.solve(7, 120) for _ in range(100)]
-    print(results)
+    # Results for all three algorithms
+    results_semi_random = [semi_random.solve(7, 120) for _ in range(2500)]
+    results_totally_random = [totally_random.solve(7, 120) for _ in range(2500)]
+    results_greedy = [greedy._solve() for _ in range(2500)]
 
-    
     # Create a directory called 'images' if it doesn't exist
     output_directory = 'plots'
     os.makedirs(output_directory, exist_ok=True)
 
-    output_path = os.path.join(output_directory, 'histogram_100_random.png')
-    plt.hist(results, bins=50, edgecolor='black', linewidth=1.2)  # Adjust bins and linewidth
-    plt.title('Histogram of Algorithm Results')
+    output_path = os.path.join(output_directory, 'comparison')
+
+    # Plot histograms as line graphs for all three algorithms with different colors
+    plt.hist(results_semi_random, bins=50, edgecolor='blue', linewidth=1.2, alpha=0.7, label='Semi-random', density=False, histtype='step')
+    plt.hist(results_totally_random, bins=50, edgecolor='green', linewidth=1.2, alpha=0.7, label='Totally random', density=False, histtype='step')
+    plt.hist(results_greedy, bins=50, edgecolor='red', linewidth=1.2, alpha=0.7, label='Greedy', density=False, histtype='step')
+
+    # Adjust linewidth and add legend
+    plt.title('Line Graph of Algorithm Results')
     plt.xlabel('Score')
     plt.ylabel('Frequency')
+    plt.legend()
+
     plt.savefig(output_path)
+    plt.show()
 
     # Print the path where the image is saved
     print(f"Histogram saved at: {output_path}")
-
+    
     # Create a directory called 'result_csv' if it doesn't exist
     output_csv_directory = 'result_csv'
     os.makedirs(output_csv_directory, exist_ok=True)
 
     # Save the results in a CSV file
-    output_csv_path = os.path.join(output_csv_directory, 'results_100_random.csv')
+    output_csv_path = os.path.join(output_csv_directory, 'test')
     with open(output_csv_path, 'w', newline='') as csvfile:
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow(['Result'])  # Write header

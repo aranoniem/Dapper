@@ -30,11 +30,16 @@ class GreedySearch:
         """
         Generates (timeframe) routes and adds the routes to the list of routes.
         """
-        for i in range(self.timeframe):
+        self.total_time_for_trajectories = 0
+        self.trajectories = []
+        
+        for i in range(random.randint(1, self.timeframe)):
             route = self._generate_route()
             self._update_trajectories(route, i)
 
-        self._calculate_and_print_score()
+        score = Score(self.level, [trajectory[0] for trajectory in self.trajectories], self.total_time_for_trajectories)
+        print(float(score.K))
+        return float(score.K)
 
     def _generate_route(self):
         """
@@ -106,6 +111,4 @@ class GreedySearch:
         """
         return [self.connections[route[i]].get_distance(route[i + 1]) for i in range(len(route) - 1)]
 
-    def _calculate_and_print_score(self):
-        score = Score(self.level, [trajectory[0] for trajectory in self.trajectories], self.total_time_for_trajectories)
-        print(score)
+        
