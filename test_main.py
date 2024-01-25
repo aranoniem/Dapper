@@ -33,12 +33,9 @@ if __name__ == '__main__':
     print('Welcome to RailNL.\n')
     
     # Usage example:
-    loader = Load(level_name)
     algoritm = BreadthFirst(level_name)
     algoritm.solve(3, 120)
     
-    # results = [random.solve(7, 120) for _ in range(100)]
-    #print(results)
     """
     Resultaten beginstation Amsterdam Sloterdijk,
     BreadthFirst met een depth van 4.

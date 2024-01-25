@@ -3,5 +3,5 @@ from .depth_first import DepthFirst #. gebruik je omdat het uit dezelfde folder 
 
 class BreadthFirst(DepthFirst):
     
-    def get_next_station(self):
+    def get_next_trajectory(self):
         return self.stack.pop(0)
