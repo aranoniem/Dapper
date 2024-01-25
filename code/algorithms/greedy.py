@@ -4,7 +4,7 @@ from code.classes.station import Station
 from code.classes.score import Score
 
 class GreedySearch:
-    def __init__(self, level, timeframe, max_time, num_colors):
+    def __init__(self, level, timeframe, max_time):
         """
         Retrieves file name, the maximum allowed time per route, and the amount of routes to be made (timeframe),
         also loads in the connections between stations. Initializes a trajectories list to keep track of found trajectories,
@@ -18,11 +18,11 @@ class GreedySearch:
         self.trajectories = []
 
     @classmethod
-    def solve(cls, level, timeframe, max_time, num_colors):
+    def solve(cls, level, timeframe, max_time):
         """
         Makes it so the GreedySearch function can be called with GreedySearch.solve(<arguments>) for ease of use.
         """
-        instance = cls(level, timeframe, max_time, num_colors)
+        instance = cls(level, timeframe, max_time)
         instance._solve()
         return instance
 
@@ -92,17 +92,7 @@ class GreedySearch:
         """
         self.total_time_for_trajectories += sum(self._calculate_total_time(route))
 
-        colors = [
-            [0, 0, 1],
-            [0, 1, 0],
-            [0, 1, 1],
-            [1, 0, 0],
-            [1, 0, 1],
-            [1, 1, 0],
-            [1, 1, 1]
-        ]
-
-        self.trajectories.append((route, colors[current_route]))
+        self.trajectories.append(route)
         print(f"Found route {len(self.trajectories)}: {route}")
 
     def _calculate_total_time(self, route):
