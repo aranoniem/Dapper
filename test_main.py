@@ -34,7 +34,7 @@ if __name__ == '__main__':
     
     # Usage example:
     algoritm = BreadthFirst(level_name)
-    algoritm.solve(3, 120)
+    algoritm.solve(7, 120)
     
     """
     Resultaten beginstation Amsterdam Sloterdijk,
