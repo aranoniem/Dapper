@@ -34,44 +34,56 @@ class Totally_random():
         pre: choose a level, a maximum amount of trajectories and a timeframe
         post: returns a random railnetwork and their quality score
         """
+        total_time, railnetwork = self.generate_railnetwork(max_trajectory, timeframe)
+            
+        #show the trajectory of the random algorithm
+        print(railnetwork)
+        quality_score = Score(self.level, railnetwork, total_time).K
+        #print(quality_score)
+        return quality_score, railnetwork
+
+    def generate_railnetwork(self, max_trajectory: int, timeframe: int) -> float:
         railnetwork = []
         total_time = 0
+        #choose a random amount of trajectories between 1 and the maximum amount of trajectories
+        self.trajectory_count = random.randint(1, max_trajectory)
 
         #create trajectories for the amount chosen 
-        for i in range(random.randint(1, max_trajectory)):
-            station = self.random_station(self.data)
-            trajectory = [station]
-            visited_stations = {station}
-            duration = 0
-
-            while True:
-                neighbours = self.data[station].get_connections()
-            
-                random_neighbour = random.choice(neighbours)
-
-                #stop making connections when timeframe is reached
-                duration += self.data[station].get_distance(random_neighbour)
-                if duration > timeframe:
-                    break
-
-                #add station to trajectory
-                trajectory.append(random_neighbour)
-
-                #remember stations that are visited in trajectory
-                visited_stations.add(random_neighbour)
-                station = random_neighbour
+        for i in range(self.trajectory_count):
+            duration, trajectory = self.generate_trajectory(timeframe)
             
             #add trajectory to railnetwork
             railnetwork.append(trajectory)
 
             #add time to total time of railnetwork
             total_time += duration
+
+        return total_time, railnetwork
+    
+    def generate_trajectory(self, timeframe):
+        station = self.random_station(self.data)
+        trajectory = [station]
+        visited_stations = {station}
+        duration = 0
+
+        while True:
+            neighbours = self.data[station].get_connections()
             
-        #show the trajectory of the random algorithm
-        #print(railnetwork)
-        quality_score = Score(self.level, railnetwork, total_time)
-        #print(quality_score)
-        return float(quality_score.K)
+            random_neighbour = random.choice(neighbours)
+
+            #stop making connections when timeframe is reached
+            duration += self.data[station].get_distance(random_neighbour)
+            if duration > timeframe:
+                break
+
+            #add station to trajectory
+            trajectory.append(random_neighbour)
+
+            #remember stations that are visited in trajectory
+            visited_stations.add(random_neighbour)
+            station = random_neighbour
+        
+        return duration, trajectory
     
 
     def random_station(self, data: dict): 
@@ -83,23 +95,3 @@ class Totally_random():
         """
         random_station = random.choice(list(data.keys()))
         return random_station
-
-    def random_connection(self, data: dict, station: str):
-        """
-        find a random connection for the purpose of making a trajectory
-
-        pre: enter a departure station
-        post: returns a station connected with the departure station 
-        """
-        neighbours = list(data[station].get_connections())
-
-        #if their are more connections, choose a random one
-        if len(neighbours) > 1:
-            random_index = random.randint(1, len(neighbours))
-            #TEST STATEMENT print(random_index)
-            random_neighbour = neighbours[random_index - 1]
-            #TEST STATEMENT print(random_neighbour)
-        #if there is only one connection, make that one
-        else:
-            random_neighbour = neighbours[0]
-        return random_neighbour

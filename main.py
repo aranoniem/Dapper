@@ -43,21 +43,23 @@ if __name__ == '__main__':
     greedy = GreedySearch(level_name, 7, 120, 4)
     
     # Results for all three algorithms
-    results_semi_random = [semi_random.solve(7, 120) for _ in range(2500)]
-    results_totally_random = [totally_random.solve(7, 120) for _ in range(2500)]
-    results_greedy = [greedy._solve() for _ in range(2500)]
+    #results_semi_random = [semi_random.solve(7, 120) for _ in range(2500)]
+    #results_totally_random = [totally_random.solve(7, 120) for _ in range(2500)]
+    results_greedy = [greedy._solve() for _ in range(5000)]
 
     # Create a directory called 'images' if it doesn't exist
     output_directory = 'plots'
     os.makedirs(output_directory, exist_ok=True)
 
     output_path = os.path.join(output_directory, 'comparison')
+    plt.hist(results_greedy, bins = 50, edgecolor = 'blue',)
 
+    """"
     # Plot histograms as line graphs for all three algorithms with different colors
     plt.hist(results_semi_random, bins=50, edgecolor='blue', linewidth=1.2, alpha=0.7, label='Semi-random', density=False, histtype='step')
     plt.hist(results_totally_random, bins=50, edgecolor='green', linewidth=1.2, alpha=0.7, label='Totally random', density=False, histtype='step')
     plt.hist(results_greedy, bins=50, edgecolor='red', linewidth=1.2, alpha=0.7, label='Greedy', density=False, histtype='step')
-
+    """
     # Adjust linewidth and add legend
     plt.title('Line Graph of Algorithm Results')
     plt.xlabel('Score')
