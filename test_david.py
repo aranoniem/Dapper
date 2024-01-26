@@ -37,13 +37,12 @@ if __name__ == '__main__':
     # Usage example:
     semi_random = Semi_random(level_name)
     totally_random = Totally_random(level_name)
-    greedy = GreedySearch(level_name, 7, 120, 4)
     local_search = Local_search(level_name)
     
     # Results for all three algorithms
     #results_semi_random = [semi_random.solve(7, 120) for _ in range(2500)]
     #results_totally_random = [totally_random.solve(7, 120) for _ in range(2500)]
-    results = [local_search.solve(120, 7, 10) for _ in range(1000)]
+    results = [local_search.solve(180, 20, 50) for _ in range(1)]
 
     # Create a directory called 'images' if it doesn't exist
     #output_directory = 'plots'

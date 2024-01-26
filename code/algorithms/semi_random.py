@@ -65,7 +65,7 @@ class Semi_random():
         visited_stations = {station}
         duration = 0
 
-        while True:
+        while timeframe > duration:
             neighbours = self.data[station].get_connections()
             
             # Filter out visited stations
@@ -79,8 +79,10 @@ class Semi_random():
                 random_neighbour = random.choice(unvisited_neighbours)
 
             #stop making connections when timeframe is reached
-            duration += self.data[station].get_distance(random_neighbour)
+            distance = self.data[station].get_distance(random_neighbour)
+            duration += distance
             if duration > timeframe:
+                duration = duration - distance
                 break
 
             #add station to trajectory
