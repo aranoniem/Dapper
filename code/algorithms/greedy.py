@@ -32,12 +32,13 @@ class GreedySearch:
         """
         self.total_time_for_trajectories = 0
         self.trajectories = []
-        
-        for i in range(random.randint(1, self.timeframe)):
-            route = self._generate_route()
-            self._update_trajectories(route, i)
 
-        score = Score(self.level, [trajectory[0] for trajectory in self.trajectories], self.total_time_for_trajectories)
+        for i in range(self.timeframe):
+            route = self._generate_route()
+            self.trajectories.append(route)
+            self._update_trajectories(route)
+
+        score = Score(self.level, self.trajectories, self.total_time_for_trajectories)
         print(float(score.K))
         return float(score.K)
 
@@ -86,13 +87,12 @@ class GreedySearch:
 
         return min(unvisited_neighbors, key=lambda x: self.connections[current_station].get_distance(x))
 
-    def _update_trajectories(self, route, current_route):
+    def _update_trajectories(self, route):
         """
         Update the list of trajectories by appending the new route and color.
         """
         self.total_time_for_trajectories += sum(self._calculate_total_time(route))
 
-        self.trajectories.append(route)
         print(f"Found route {len(self.trajectories)}: {route}")
 
     def _calculate_total_time(self, route):
@@ -100,5 +100,3 @@ class GreedySearch:
         Retrieves the sum of the distances between stations.
         """
         return [self.connections[route[i]].get_distance(route[i + 1]) for i in range(len(route) - 1)]
-
-        
