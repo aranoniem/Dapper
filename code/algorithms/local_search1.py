@@ -6,7 +6,7 @@ from .semi_random import Semi_random
 from code.classes.score import Score
 
 
-class Local_search(Semi_random):
+class Local_search1(Semi_random):
     def __init__(self, level: str):
         """
         Initialize the parent algorithm which is semi_random
@@ -26,6 +26,7 @@ class Local_search(Semi_random):
         """
         #initialize start of iterations
         self.iterations = 0
+        results = []
 
         # calculate quality score for the random rail network
         total_time, railnetwork = self.generate_railnetwork(max_trajectory, timeframe)
@@ -51,10 +52,12 @@ class Local_search(Semi_random):
                 quality_score, railnetwork, total_time = self.swap_trajectory(quality_score, railnetwork, total_time)
 
             self.iterations += 1
+            results.append(quality_score)
+            
             print(self.iterations)
 
         print(quality_score, railnetwork)
-        return quality_score, railnetwork
+        return quality_score, railnetwork, results
 
     def remove_trajectory(self, quality_score: int, railnetwork: List[Any], total_time: int) -> Tuple[int, List[Any], int]:
         """

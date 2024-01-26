@@ -42,28 +42,22 @@ if __name__ == '__main__':
     # Results for all three algorithms
     #results_semi_random = [semi_random.solve(7, 120) for _ in range(2500)]
     #results_totally_random = [totally_random.solve(7, 120) for _ in range(2500)]
-    results = [local_search.solve(180, 20, 50) for _ in range(1)]
+    #max_score, railnetwork, results = local_search.solve(180, 20, 100)
+    results_local_search = [local_search.solve2(180, 20, 10)[0] for _ in range(1)]
+    maximum = int(max(results_local_search))
 
     # Create a directory called 'images' if it doesn't exist
-    #output_directory = 'plots'
-    #os.makedirs(output_directory, exist_ok=True)
+    output_directory = 'plots'
+    os.makedirs(output_directory, exist_ok=True)
 
-    #output_path = os.path.join(output_directory, 'greedy_5000_holland')
-    #plt.hist(results_greedy, bins = 50, edgecolor = 'black', linewidth = 1.2)
+    output_path = os.path.join(output_directory, 'test_local_search_holland')
+    plt.hist(results_local_search, bins = 50, edgecolor = 'black', linewidth = 1.2)
 
-    """"
-    # Plot histograms as line graphs for all three algorithms with different colors
-    plt.hist(results_semi_random, bins=50, edgecolor='blue', linewidth=1.2, alpha=0.7, label='Semi-random', density=False, histtype='step')
-    plt.hist(results_totally_random, bins=50, edgecolor='green', linewidth=1.2, alpha=0.7, label='Totally random', density=False, histtype='step')
-    plt.hist(results_greedy, bins=50, edgecolor='red', linewidth=1.2, alpha=0.7, label='Greedy', density=False, histtype='step')
-    """
-    """
     # Adjust linewidth and add legend
-    plt.title('Line Graph of Algorithm Results')
-    plt.xlabel('Score')
+    plt.title('test results local search')
+    plt.xlabel(f'Score, max score = {maximum}')
     plt.ylabel('Frequency')
     plt.legend()
 
     plt.savefig(output_path)
     plt.show()
-    """
