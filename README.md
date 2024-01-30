@@ -24,7 +24,21 @@ The program can be used with two datasets: Holland and Nationaal. You could use 
 python3 main.py
 ```
 
-This will prompt you for an algorithm with which you would like create a rail network, at what level you want your algorithm, how many trajectories can be used as a maximum, how long each trajectory may be timewise and how many iterations you would prefer. If it is an iterative algorithm it will also ask the program will also ask for the maximum amount of iterations one iteration can have without a better solution. After that it will output the generated rail network and its quality score (K).
+This will prompt you for an algorithm with which you would like create a rail network, at what level you want your algorithm, how many trajectories can be used as a maximum, how long each trajectory may be timewise and how many iterations you would prefer. If it is an iterative algorithm it will also ask the program will also ask for the maximum amount of iterations one iteration can have without a better solution.
+
+The recommended parameters for Holland:
+* a maximum trajectory of 7
+* a maximum timeframe of 120
+* 10000 iterations
+* for iterative algorithms: max 120 iterations without change and 40 iterations total
+
+The recommended parameters for Holland:
+* a maximum trajectory of 20
+* a maximum timeframe of 180
+* 10000 iterations
+* for iterative algorithms: max 250 iterations without change and 20 iterations total
+
+ After that it will output the generated rail network and its quality score (K).
 
 ### Structure 
 The following list describes the organization of the directory and its most important components.
