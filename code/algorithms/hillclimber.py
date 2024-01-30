@@ -5,8 +5,7 @@ from typing import Any, List, Tuple
 from .semi_random import Semi_random
 from code.classes.score import Score
 
-
-class Local_search1(Semi_random):
+class Hillclimber(Semi_random):
     def __init__(self, level: str):
         """
         Initialize the parent algorithm which is semi_random
@@ -26,11 +25,10 @@ class Local_search1(Semi_random):
         """
         #initialize start of iterations
         self.iterations = 0
-        results = []
 
         # calculate quality score for the random rail network
         total_time, railnetwork = self.generate_railnetwork(max_trajectory, timeframe)
-        quality_score = int(Score(self.level, railnetwork, total_time).K)
+        quality_score = Score(self.level, railnetwork, total_time).K
 
         # when there is no change in max_iterations, the algorithm will stop
         while self.iterations <= max_iterations:
@@ -52,12 +50,12 @@ class Local_search1(Semi_random):
                 quality_score, railnetwork, total_time = self.swap_trajectory(quality_score, railnetwork, total_time)
 
             self.iterations += 1
-            results.append(quality_score)
+            
             
             print(self.iterations)
 
         print(quality_score, railnetwork)
-        return quality_score, railnetwork, results
+        return quality_score, railnetwork, total_time
 
     def remove_trajectory(self, quality_score: int, railnetwork: List[Any], total_time: int) -> Tuple[int, List[Any], int]:
         """
@@ -75,7 +73,7 @@ class Local_search1(Semi_random):
             temp_railnetwork = railnetwork.copy()
             deleted_time = self.calculate_time(temp_railnetwork[i])
             del temp_railnetwork[i]
-            temp_quality_score = int(Score(self.level, temp_railnetwork, (total_time - deleted_time)).K)
+            temp_quality_score = Score(self.level, temp_railnetwork, (total_time - deleted_time)).K
 
             # search for the trajectory that will make the highest score when deleted
             if temp_quality_score > best_deleted_score:
@@ -109,7 +107,7 @@ class Local_search1(Semi_random):
             temp_railnetwork.append(self.new_trajectory)
             temp_total_time = total_time
             temp_total_time += self.duration
-            temp_quality_score = int(Score(self.level, temp_railnetwork, temp_total_time).K)
+            temp_quality_score = Score(self.level, temp_railnetwork, temp_total_time).K
 
             # if addition returns a better solution, add
             if temp_quality_score > quality_score:
@@ -140,7 +138,7 @@ class Local_search1(Semi_random):
             trajectory_time = self.calculate_time(temp_railnetwork[i])
             temp_railnetwork[i] = self.new_trajectory
             temp_total_time = total_time - trajectory_time + self.duration
-            temp_quality_score = int(Score(self.level, temp_railnetwork, temp_total_time).K)
+            temp_quality_score = Score(self.level, temp_railnetwork, temp_total_time).K
 
             # searches for the best solution in all swaps
             if temp_quality_score > best_swap_score:
