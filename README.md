@@ -21,10 +21,10 @@ pip install - r requirements.txt
 The program can be used with two datasets: Holland and Nationaal. You could use either by calling it in the place of “dataset”, or when using Holland to leave “dataset” empty.
 
 ```
-python3 main.py “dataset”
+python3 main.py
 ```
 
-This will prompt you for an algorithm with which you would like create a rail network, how many trajectories can be used as a maximum and how long each trajectory may be timewise. The program will output the generated rail network and its quality score (K).
+This will prompt you for an algorithm with which you would like create a rail network, at what level you want your algorithm, how many trajectories can be used as a maximum, how long each trajectory may be timewise and how many iterations you would prefer. If it is an iterative algorithm it will also ask the program will also ask for the maximum amount of iterations one iteration can have without a better solution. After that it will output the generated rail network and its quality score (K).
 
 ### Structure 
 The following list describes the organization of the directory and its most important components.
@@ -54,14 +54,19 @@ BreadthFirst is implemented using a parentclass of DepthFirst. It creates a tree
 DepthFirst creates a tree from a random starting station. It searches for all the connections to the starting station with a depth of the maximum time a trajectory may take. Once this depth is reached, a rail network is created by comparing the qualityscore between single and multiple trajectories taken from said tree.
 
 ### Greedy
+Greedy will take a random station and search for the shortest route that can be taken from that station on forward. If it comes across a station it has already visited than it will take the second shortest route if there is another one available.
 
-### Local Search 1
+### Hillclimber
+Hillclimber will take a semi random solution and search if deleting a trajectory will improve the solution. If so, it is searched which trajectory contributes the least and deletes that one. Than it will generate a new solution and search if adding that trajectory or swapping that trajectory with an already existing trajectory will improve the score. 
 
-### Local Search 2
+### Local_search
+Local search will take a hillclimber solution and search if there are starting- and ending stations that can be removed to improve the score
 
 ### Semi-Random
+Semi_random will make a random amount of random trajectories, based on random startingstations. There is one constraint and that is that it will avoid visiting a station it has already visited unless there is no other option
 
 ### Totally-Random
+Totally_random will make a random amount of random trajectories, based on random startingstations.
 
 ## Visualization (todo: plaatjes maken van up to date staat en toevoegen)
 ### map visualisation
