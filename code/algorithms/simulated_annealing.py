@@ -5,10 +5,11 @@ from code.classes.load import Load
 from code.classes.station import Station
 from code.classes.score import Score
 
-class SimulatedAnnealing:
+class Simulated_annealing:
     def __init__(self, level: str):
         self.data = Load(level).objects
         self.level = level
+        self.total_time = 0
 
     def solve(self, num_trajectories: int, timeframe: int, initial_temperature: float, cooling_rate: float) -> tuple:
         best_score = None
@@ -17,21 +18,24 @@ class SimulatedAnnealing:
         current_temperature = initial_temperature
 
         railnetwork = self.initial_solution(num_trajectories, timeframe)
-        current_score = float(str(Score(self.level, railnetwork, timeframe)))
+        current_score = float(str(Score(self.level, railnetwork, self.total_time)))
         
+        temperatures = []  # Store temperatures
         
         while current_temperature > 10:
             new_railnetwork = self.random_neighbor(railnetwork)
-            new_score = float(str(Score(self.level, new_railnetwork, timeframe)))
+            new_score = float(str(Score(self.level, new_railnetwork, self.total_time)))
             
             # if the randomly generated number between 0 and 1 is smaller than the acceptance probability
             if self.acceptance_probability(current_score, new_score, current_temperature) > random.random():
                 railnetwork = new_railnetwork
                 current_score = new_score
-                
-                print(railnetwork)
-                print(current_score)
 
+            temperatures.append(current_temperature)  # Store current temperature
+            
+            print(railnetwork)
+            print(current_score)
+                
             # update the temperature because the cooling rate is basically the percentage that is removed each iteration so 1 - cooling rate is the growth factor
             current_temperature *= (1 - cooling_rate)
 
@@ -40,12 +44,13 @@ class SimulatedAnnealing:
                 best_railnetwork = railnetwork
 
         if best_score is not None:
-            return best_score, best_railnetwork
+            return best_score, best_railnetwork, temperatures
         else:
-            return float('inf'), None
+            return float('inf'), None, temperatures
 
     def initial_solution(self, num_trajectories: int, timeframe: int) -> list:
         railnetwork = []
+        self.total_time = 0
         
         # for every route
         for _ in range(num_trajectories):
@@ -69,6 +74,7 @@ class SimulatedAnnealing:
                 if trajectory:
                     distance = self.data[trajectory[-1]].get_distance(station)
                     duration += distance
+                    self.total_time += distance
     
                 # check if the trajectory exceeds the timeframe
                 if duration > timeframe:
@@ -100,7 +106,7 @@ class SimulatedAnnealing:
         """
         Determines the probability that a solution will be accepted. The value of this function is compared to random.random() that generates a random number between 0 and 1
         this is why it returns 1 if the current solution is better than the previous solution because it always accepts it in that way. Because the temperature decreases it becomes 
-        less likely a bad soilution will be accepted because the fraction of the exponent will be smaller.
+        less likely a bad solution will be accepted because the fraction of the exponent will be bigger.
         """
         if new_score > current_score:
             return 1.0

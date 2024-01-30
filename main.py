@@ -5,17 +5,23 @@ from sys import argv
 import matplotlib.pyplot as plt
 import os
 import csv
-import seaborn as sns
-from seaborn import kdeplot
 
-#import from classes
+# Import from classes
 sys.path.append('code')
-from code.classes.load import Load
 from code.algorithms.totally_random import Totally_random
 from code.algorithms.semi_random import Semi_random
-from code.algorithms.greedy import GreedySearch
+from code.algorithms.greedy_search import Greedy_search
+from code.algorithms.depth_first import Depth_first
+from code.algorithms.breadth_first import Breadth_first
+from code.algorithms.hillclimber import Hillclimber
+from code.algorithms.local_search import Local_search
+from code.algorithms.simulated_annealing import Simulated_annealing
 
-#from railnetwork import Railnetwork
+sys.path.append('functions')
+from functions.user_interface import get_user_input
+
+sys.path.append('visualisation')
+from visualisation.coordinates import Railroadmap
 
 if __name__ == '__main__':
 
@@ -30,72 +36,65 @@ if __name__ == '__main__':
     elif len(argv) == 2:
         level_name = argv[1]
 
-
-    # Create connections
-    rail_nl = Load(level_name)
-
     print('Welcome to RailNL.\n')
-    
-    # Usage example:
-    loader = Load(level_name)
-    semi_random = Semi_random(level_name)
-    totally_random = Totally_random(level_name)
-    greedy = GreedySearch(level_name, 7, 120, 4)
-    
-    # Results for all three algorithms
-    #results_semi_random = [semi_random.solve(7, 120) for _ in range(2500)]
-    #results_totally_random = [totally_random.solve(7, 120) for _ in range(2500)]
-    results_greedy = [greedy._solve() for _ in range(5000)]
 
-    # Create a directory called 'images' if it doesn't exist
+    algorithm_choice, level_name, trajectories, timeframe, iterations, max_iterations = get_user_input()
+
+    algorithm = globals()[algorithm_choice.capitalize()](level_name)  # Adjust the parameters as needed
+
+    results = []
+    best_quality_score = 0
+
+    if algorithm_choice == "hillclimber" or algorithm_choice == "local_search":
+        for i in range(iterations):
+            quality_score, railnetwork, temperature = algorithm.solve(trajectories, timeframe, max_iterations)
+            results.append(quality_score)
+            if quality_score > best_quality_score:
+                best_quality_score = quality_score
+                best_railnetwork = railnetwork
+    elif algorithm_choice == "simulated_annealing":
+        for i in range(iterations):
+            quality_score, railnetwork, temperature = algorithm.solve(trajectories, timeframe, 8000, 0.1)
+            results.append(quality_score)
+            if quality_score > best_quality_score:
+                best_quality_score = quality_score
+                best_railnetwork = railnetwork
+    else:
+        for i in range(iterations):
+            quality_score, railnetwork = algorithm.solve(trajectories, timeframe)
+            results.append(quality_score)
+            if quality_score > best_quality_score:
+                best_quality_score = quality_score
+                best_railnetwork = railnetwork
+
+    # Create a directory called '' if it doesn't exist
     output_directory = 'plots'
     os.makedirs(output_directory, exist_ok=True)
 
-    output_path = os.path.join(output_directory, 'comparison')
-    plt.hist(results_greedy, bins = 50, edgecolor = 'blue',)
+    output_path = os.path.join(output_directory, f'{level_name}_{iterations}_{algorithm_choice}')
+    plt.hist(results, bins=50, edgecolor='black', linewidth=1.2)
 
-    """"
-    # Plot histograms as line graphs for all three algorithms with different colors
-    plt.hist(results_semi_random, bins=50, edgecolor='blue', linewidth=1.2, alpha=0.7, label='Semi-random', density=False, histtype='step')
-    plt.hist(results_totally_random, bins=50, edgecolor='green', linewidth=1.2, alpha=0.7, label='Totally random', density=False, histtype='step')
-    plt.hist(results_greedy, bins=50, edgecolor='red', linewidth=1.2, alpha=0.7, label='Greedy', density=False, histtype='step')
-    """
     # Adjust linewidth and add legend
-    plt.title('Line Graph of Algorithm Results')
-    plt.xlabel('Score')
-    plt.ylabel('Frequency')
-    plt.legend()
+    plt.title(f'Optimizing Algorithm Performance: {algorithm_choice.capitalize()} Approach\nHistogram Analysis at {level_name.capitalize()} Level')
+    plt.xlabel(f'Quality score, max score = {best_quality_score}')
+    plt.ylabel(f'Frequency (N = {iterations})')
 
     plt.savefig(output_path)
     plt.show()
 
-    # Print the path where the image is saved
-    print(f"Histogram saved at: {output_path}")
+    # Create a directory called '' if it doesn't exist
+    output_directory = 'csv_files'
+    os.makedirs(output_directory, exist_ok=True)
+
+    # Save railnetwork to CSV
+    railnetwork_csv_path = os.path.join(output_directory, f'{level_name}_{iterations}_{algorithm_choice}.csv')
+    with open(railnetwork_csv_path, 'w', newline='') as csvfile:
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(['train', 'stations'])
+        for i, trajectory in enumerate(best_railnetwork, start=1):
+            csv_writer.writerow([f'train_{i}', str(trajectory)])
+        csv_writer.writerow(['score', best_quality_score])
+    print("in csv")
     
-    # Create a directory called 'result_csv' if it doesn't exist
-    output_csv_directory = 'result_csv'
-    os.makedirs(output_csv_directory, exist_ok=True)
-
-    # Save the results in a CSV file
-    output_csv_path = os.path.join(output_csv_directory, 'test')
-    with open(output_csv_path, 'w', newline='') as csvfile:
-        csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(['Result'])  # Write header
-        csvwriter.writerows([[result] for result in results])  # Write results
-        
-
-
-    #train_1 = rail_nl.generate_trajectory()
-    #TEST STATEMENT print(train_1)
-    #train_2 = rail_nl.generate_trajectory()
-    #train_3 = rail_nl.generate_trajectory()
-
-    #TEST STATEMENT print('train, stations')
-    #print("trein,stations")
-    #print(f'train_1, "{train_1}"')
-    #print(f'train_2, "{train_2}"')  
-    #print(f'train_3, "{train_3}"')
-
-
-
-
+    railroad_map = Railroadmap(level_name)
+    railroad_map.main(best_railnetwork)

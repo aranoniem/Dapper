@@ -1,7 +1,7 @@
 # Import algorithms
-from .depth_first import DepthFirst #. gebruik je omdat het uit dezelfde folder komt. moet ivm main.py vanuit de root.
+from .depth_first import Depth_first #. gebruik je omdat het uit dezelfde folder komt. moet ivm main.py vanuit de root.
 
-class BreadthFirst(DepthFirst):
+class Breadth_first(Depth_first):
     
     def get_next_trajectory(self):
         return self.stack.pop(0)

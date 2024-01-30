@@ -16,8 +16,7 @@ class Local_search(Hillclimber):
         super().__init__(level)  # Call the constructor of the parent class
     
 
-    def solve(self, timeframe: int, max_trajectory: int, max_iterations: int, 
-              max_iterations2: int) -> Tuple[float, List[Any]]:
+    def solve(self, timeframe: int, max_trajectory: int, max_iterations: int) -> Tuple[float, List[Any]]:
         """
         Create a solution where the beginning station and end station are removed for a better score
 
@@ -30,7 +29,7 @@ class Local_search(Hillclimber):
         iterations = 0
         print(f"total time", total_time)
 
-        while iterations <= max_iterations2:
+        while iterations <= 1:
             # start with the best solution
             temp_railnetwork = railnetwork.copy()
 

@@ -9,7 +9,7 @@ from code.classes.station import Station
 from code.classes.score import Score
 from code.classes.trajectory import Trajectory
 
-class DepthFirst():
+class Depth_first():
     """
     Create a solution based on children of a random station
 
