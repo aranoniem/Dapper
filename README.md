@@ -6,20 +6,23 @@ Dapper RailNL is a project for the minor Programming at the University of Amster
 ### Prerequisites
 This code is written using Python 3.6 and up. To get started, it is important to clone this directory onto your own computer. After downloading, go to the directory.
 
-
-> git clone https://github.com/aranoniem/Dapper.git
->
-> cd Dapper
-
+```
+git clone https://github.com/aranoniem/Dapper.git
+cd Dapper
+```
 
 In requirements.txt are packages needed to run this directory smoothly. These are easily installed via pip, using the following command:
 
-> pip install - r requirements.txt
+```
+pip install - r requirements.txt
+```
 
 ### Usage
 The program can be used with two datasets: Holland and Nationaal. You could use either by calling it in the place of “dataset”, or when using Holland to leave “dataset” empty.
 
-> python3 main.py “dataset”
+```
+python3 main.py “dataset”
+```
 
 This will prompt you for an algorithm with which you would like create a rail network, how many trajectories can be used as a maximum and how long each trajectory may be timewise. The program will output the generated rail network and its quality score (K).
 
