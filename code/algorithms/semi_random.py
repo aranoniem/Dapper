@@ -37,7 +37,7 @@ class Semi_random():
             
         #show the trajectory of the random algorithm
         print(railnetwork)
-        quality_score = Score(self.level, railnetwork, total_time).K
+        quality_score = float(Score(self.level, railnetwork, total_time).K)
         #print(quality_score)
         return quality_score, railnetwork
 
@@ -92,6 +92,9 @@ class Semi_random():
             visited_stations.add(random_neighbour)
             station = random_neighbour
         
+        #remove quotation marks
+        #trajectory = '[' + ', '.join(trajectory) + ']'
+        print(trajectory)
         return duration, trajectory
     
 

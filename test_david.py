@@ -22,7 +22,7 @@ from functions.user_interface import get_user_input
 #from railnetwork import Railnetwork
 
 if __name__ == '__main__':
-    
+
     print('Welcome to RailNL.\n')
 
     algorithm_choice, level_name, trajectories, timeframe, iterations, max_iterations  = get_user_input()
@@ -38,6 +38,7 @@ if __name__ == '__main__':
             if quality_score > best_quality_score:
                 best_quality_score = quality_score
                 best_railnetwork = railnetwork
+                #DUBBELE CODE
     else:
         for i in range(iterations):
             quality_score, railnetwork = algorithm.solve(trajectories, timeframe)
@@ -50,7 +51,7 @@ if __name__ == '__main__':
     output_directory = 'plots'
     os.makedirs(output_directory, exist_ok=True)
 
-    output_path = os.path.join(output_directory, 'nationaal_20_250_hillclimber')
+    output_path = os.path.join(output_directory, f'{level_name}_{iterations}_{algorithm_choice}')
     plt.hist(results, bins = 50, edgecolor = 'black', linewidth = 1.2)
 
     # Adjust linewidth and add legend
@@ -61,11 +62,16 @@ if __name__ == '__main__':
     plt.savefig(output_path)
     plt.show()
 
+    # Create a directory called '' if it doesn't exist
+    output_directory = 'csv_files'
+    os.makedirs(output_directory, exist_ok=True)
+
     # Save railnetwork to CSV
-    railnetwork_csv_path = os.path.join(output_directory, 'max_solution_railnetwork_definite.csv')
+    railnetwork_csv_path = os.path.join(output_directory, f'{level_name}_{iterations}_{algorithm_choice}.csv')
     with open(railnetwork_csv_path, 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(['train', 'stations'])
         for i, trajectory in enumerate(best_railnetwork, start=1):
             csv_writer.writerow([f'train_{i}', str(trajectory)])
         csv_writer.writerow(['score', best_quality_score])
+    print("in csv")

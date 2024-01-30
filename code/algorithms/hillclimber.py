@@ -15,7 +15,7 @@ class Hillclimber(Semi_random):
         """
         super().__init__(level)
 
-    def solve(self, timeframe: int, max_trajectory: int, max_iterations: int) -> Tuple[int, List[Any]]:
+    def solve(self, max_trajectory: int, timeframe: int, max_iterations: int) -> Tuple[int, List[Any]]:
         """
         Searches for the highest score by deleting, adding, or swapping trajectories,
         but stops when there is no alteration for the max amount of iterations
@@ -28,7 +28,7 @@ class Hillclimber(Semi_random):
 
         # calculate quality score for the random rail network
         total_time, railnetwork = self.generate_railnetwork(max_trajectory, timeframe)
-        quality_score = Score(self.level, railnetwork, total_time).K
+        quality_score = float(Score(self.level, railnetwork, total_time).K)
 
         # when there is no change in max_iterations, the algorithm will stop
         while self.iterations <= max_iterations:
@@ -57,7 +57,7 @@ class Hillclimber(Semi_random):
         print(quality_score, railnetwork)
         return quality_score, railnetwork, total_time
 
-    def remove_trajectory(self, quality_score: int, railnetwork: List[Any], total_time: int) -> Tuple[int, List[Any], int]:
+    def remove_trajectory(self, quality_score: float, railnetwork: List[Any], total_time: int) -> Tuple[float, List[Any], int]:
         """
         Looks for a better score when a trajectory is deleted from a rail network
 
@@ -73,7 +73,7 @@ class Hillclimber(Semi_random):
             temp_railnetwork = railnetwork.copy()
             deleted_time = self.calculate_time(temp_railnetwork[i])
             del temp_railnetwork[i]
-            temp_quality_score = Score(self.level, temp_railnetwork, (total_time - deleted_time)).K
+            temp_quality_score = float(Score(self.level, temp_railnetwork, (total_time - deleted_time)).K)
 
             # search for the trajectory that will make the highest score when deleted
             if temp_quality_score > best_deleted_score:
@@ -90,7 +90,7 @@ class Hillclimber(Semi_random):
 
         return quality_score, railnetwork, total_time
 
-    def add_trajectory(self, quality_score: int, railnetwork: List[Any], total_time: int, max_trajectory: int) -> Tuple[int, List[Any], int]:
+    def add_trajectory(self, quality_score: float, railnetwork: List[Any], total_time: int, max_trajectory: int) -> Tuple[float, List[Any], int]:
         """
         Looks for a better score when a trajectory is added to a rail network
 
@@ -107,7 +107,7 @@ class Hillclimber(Semi_random):
             temp_railnetwork.append(self.new_trajectory)
             temp_total_time = total_time
             temp_total_time += self.duration
-            temp_quality_score = Score(self.level, temp_railnetwork, temp_total_time).K
+            temp_quality_score = float(Score(self.level, temp_railnetwork, temp_total_time).K)
 
             # if addition returns a better solution, add
             if temp_quality_score > quality_score:
@@ -119,7 +119,7 @@ class Hillclimber(Semi_random):
 
         return quality_score, railnetwork, total_time
 
-    def swap_trajectory(self, quality_score: int, railnetwork: List[Any], total_time: int) -> Tuple[int, List[Any], int]:
+    def swap_trajectory(self, quality_score: float, railnetwork: List[Any], total_time: int) -> Tuple[float, List[Any], int]:
         """
         Looks for a better score when a trajectory is swapped with a 
         random trajectory in a rail network
@@ -138,7 +138,7 @@ class Hillclimber(Semi_random):
             trajectory_time = self.calculate_time(temp_railnetwork[i])
             temp_railnetwork[i] = self.new_trajectory
             temp_total_time = total_time - trajectory_time + self.duration
-            temp_quality_score = Score(self.level, temp_railnetwork, temp_total_time).K
+            temp_quality_score = float(Score(self.level, temp_railnetwork, temp_total_time).K)
 
             # searches for the best solution in all swaps
             if temp_quality_score > best_swap_score:
