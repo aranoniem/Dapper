@@ -10,6 +10,7 @@ sys.path.append('code')
 from code.classes.load import Load
 from code.algorithms.depth_first import DepthFirst
 from code.algorithms.breadth_first import BreadthFirst
+from code.functions.calculations import identify_dead_end
 
 #from railnetwork import Railnetwork
 
@@ -35,6 +36,7 @@ if __name__ == '__main__':
     # Usage example:
     algoritm = BreadthFirst(level_name)
     algoritm.solve(7, 120)
+    print(f"dead ends:", identify_dead_end(level_name))
     
     """
     Resultaten beginstation Amsterdam Sloterdijk,
