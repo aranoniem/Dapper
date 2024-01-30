@@ -6,30 +6,29 @@ from matplotlib.patches import FancyArrowPatch
 from matplotlib.lines import Line2D
 import geopandas as gpd
 import contextily as cx
+import os
+import sys
 
-sys.path.append('code')
-from code.algorithms.greedy import GreedySearch
-from code.classes.station import Station
+sys.path.append('../code')
+from algorithms.greedy import GreedySearch
+from classes.station import Station
 
 class Railroadmap:
-    def __init__(self, level, latitude, longitude):
-        self.latitude = latitude
-        self.longitude = longitude
-        self.connections = []  # List to store connected locations
-        self.trajectories = []  # List to store trajectories
+    def __init__(self, level):
         self.level = level
-        
+        self.latitude = 0.0
+        self.longitude = 0.0
         # stores the offset for x or y for one extra connection.
         # the reason for the offset being different for "Holland" than for "Nationaal" is because "Holland" has a lower density 
         # in connections so with a low offset its still visible
         self.offset_coefficient = 0.008 if level == "Holland" else 0.016
 
-    def read_locations(self, file_path):
+    def read_locations(self):
         """
         read out all the connections from the csv file and store it in a dictionary that has the values mapped by place name
         """
         locations = {}
-        with open(file_path, 'r') as csv_file:
+        with open(f'data/Stations{self.level}.csv', 'r') as csv_file:
             csv_reader = csv.reader(csv_file)
             next(csv_reader)  # Skip the header line
 
@@ -39,13 +38,13 @@ class Railroadmap:
 
         return locations
 
-    def read_connections(self, file_path):
+    def read_connections(self):
         """
         read out all the connection s between stations from the csv file and store the connections in a dictionary mapped by the departure station
         """
         connections = {}
 
-        with open(file_path, 'r') as csv_file:
+        with open(f'data/Connecties{self.level}.csv', 'r') as csv_file:
             csv_reader = csv.reader(csv_file)
             next(csv_reader)  # Skip the header line
 
@@ -81,10 +80,10 @@ class Railroadmap:
         NL_shape.plot(ax=ax, alpha=0.3, edgecolor="black", facecolor="white")
 
         plt.scatter([loc.longitude for loc in locations.values()], [loc.latitude for loc in locations.values()], marker='o', color='red')
-
+        
         for loc in locations.values():
             plt.text(loc.longitude, loc.latitude, loc.name, ha='right', va='bottom', fontsize=8)
-
+            
         # Draw lines for connections that are not part of any route
         for dep_station, destinations in connections.items():
             for dest, time in destinations:
@@ -96,7 +95,7 @@ class Railroadmap:
                     used_reversed_connections.add(reversed_connection)
                 
                 # If the connection is not part of a route
-                if connection not in self.connections and reversed_connection not in self.connections:
+                if connection not in connections and reversed_connection not in connections:
                     dep_coords = locations[dep_station]
                     arr_coords = locations[dest]
 
@@ -206,21 +205,18 @@ class Railroadmap:
         plt.ylim(min_lat - 0.1, max_lat + 0.1)
         plt.gca().set_aspect('equal', adjustable='box')
 
-    def main(self):
-        locations = self.read_locations(f'data/Stations{self.level}.csv')
-        connections = self.read_connections(f'data/Connecties{self.level}.csv')
+    def main(self, trajectories):
+        locations = self.read_locations()
+        connections = self.read_connections()
 
         # stores the path to the shapefile which is used for retrieving the map of the Netherlands
         # shapefile origin: https://www.naturalearthdata.com/downloads/50m-cultural-vectors/
         # sources: https://stackoverflow.com/questions/65110568/how-to-add-a-real-map-as-the-background-to-a-plot, https://contextily.readthedocs.io/en/latest/intro_guide.html
         # https://stackoverflow.com/questions/61436956/set-shape-restore-shx-config-option-to-yes-to-restore-or-create-it
-        shapefile_path = 'shapefile_for_visualisation/ne_50m_admin_0_countries.shp'
+        shapefile_path = 'visualisation/shapefile_for_visualisation/ne_50m_admin_0_countries.shp'
 
         # Read the shapefile in for plotting it later
         NL_shape = gpd.read_file(shapefile_path)
-        greedy_search = GreedySearch.solve(self.level, 7, 120)
-
-        trajectories = greedy_search.trajectories
 
         self.trajectories = trajectories
 
@@ -235,5 +231,10 @@ class Railroadmap:
         plt.show()
 
 if __name__ == "__main__":
-    railroad_map = Railroadmap("Nationaal", 0.0, 0.0)
-    railroad_map.main()
+    level = "Nationaal"
+
+    # Replace with your own method to generate trajectories
+    trajectories = GreedySearch.solve(level, 7, 120).trajectories
+
+    railroad_map = Railroadmap(level)
+    railroad_map.main(trajectories)
