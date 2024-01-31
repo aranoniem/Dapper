@@ -84,10 +84,10 @@ Totally_random will make a random amount of random trajectories, based on random
 
 ## Visualization (todo: plaatjes maken van up to date staat en toevoegen)
 ### map visualisation
-![Map visualisation](/images/Map%20of%20railNL%20v1.jpg)
+![Map visualisation](/images/RailNL_output_fullyrandom.jpg)
 
 ### our current output
-![Current output](/images/RailNL%20output%2012%201%202024.png)
+![Current output](/images/)
 ## Authors
 * Paco van der Vliet
 * David Verboom
