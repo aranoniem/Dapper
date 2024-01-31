@@ -224,16 +224,5 @@ class Railroadmap:
 
         plt.xlabel('Latitude')
         plt.ylabel('Longitude')
-        plt.title(f'Coordinate Grid of Locations in {self.level} with Connections and Times')
-
         plt.grid(True)
         plt.show()
-
-if __name__ == "__main__":
-    level = "Nationaal"
-
-    # Replace with your own method to generate trajectories
-    trajectories = GreedySearch.solve(level, 7, 120).trajectories
-
-    railroad_map = Railroadmap(level)
-    railroad_map.main(trajectories)

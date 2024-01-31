@@ -1,4 +1,4 @@
-#import from libraries
+# Import from libraries
 from typing import Any
 import sys
 from sys import argv
@@ -17,6 +17,7 @@ from code.algorithms.hillclimber import Hillclimber
 from code.algorithms.local_search import Local_search
 from code.algorithms.simulated_annealing import Simulated_annealing
 
+# Import from functions
 sys.path.append('functions')
 from functions.helpers import get_user_input, finetune_railnetwork
 from functions.elements import get_random_station
@@ -32,9 +33,11 @@ if __name__ == '__main__':
 
     algorithm = globals()[algorithm_choice.capitalize()](level_name)  # Adjust the parameters as needed
 
+    # Initalize
     results = []
     best_quality_score = 0
 
+    # Run algorithm of choice
     for i in range(iterations):
         if algorithm_choice == "hillclimber" or algorithm_choice == "local_search":
             quality_score, railnetwork = algorithm.solve(trajectories, timeframe, max_iterations)
@@ -43,6 +46,7 @@ if __name__ == '__main__':
         else:
             quality_score, railnetwork = algorithm.solve(trajectories, timeframe)
 
+        # If no better railnetwork, use default
         if i == 0:
             best_railnetwork = railnetwork.copy()
 
@@ -53,7 +57,7 @@ if __name__ == '__main__':
             best_railnetwork = railnetwork
 
     # Create a directory called maps
-    output_directory = 'maps'
+    output_directory = 'results/maps'
     os.makedirs(output_directory, exist_ok=True)
 
     # Create visualisation
@@ -65,7 +69,7 @@ if __name__ == '__main__':
     plt.savefig(output_path)
 
     # Create a directory plots
-    output_directory = 'plots'
+    output_directory = 'results/plots'
     os.makedirs(output_directory, exist_ok=True)
 
     # Adjust the plot to liking
@@ -77,7 +81,7 @@ if __name__ == '__main__':
     plt.savefig(output_path)
 
     # Create a directory called csv_files
-    output_directory = 'csv_files'
+    output_directory = 'results/csv_files'
     os.makedirs(output_directory, exist_ok=True)
 
     # Finetune output

@@ -32,7 +32,7 @@ class Totally_random():
         self.data = Load(level).objects
         self.level = level
 
-    def solve(self, max_trajectory: int, timeframe: int) -> Tuple[float, List[List[str]]:
+    def solve(self, max_trajectory: int, timeframe: int) -> Tuple[float, List[List[str]]]:
         """
         Create a random railnetwork and calculate their score
 
@@ -48,7 +48,7 @@ class Totally_random():
         return quality_score, railnetwork
 
     def generate_railnetwork(self, max_trajectory: int,
-                             timeframe: int) -> float:
+                             timeframe: int) -> Tuple[float, List[List[str]]]:
         """
         generate a railnetwork based on randomly generated trajectories
 
@@ -72,7 +72,7 @@ class Totally_random():
 
         return total_time, railnetwork
 
-    def generate_trajectory(self, timeframe):
+    def generate_trajectory(self, timeframe: int) -> Tuple[int, List[str]]:
         """
         Generate a random trajectory based on a random starting station
         and random neighbours
