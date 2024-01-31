@@ -22,3 +22,11 @@ def get_user_input():
     else:
         max_iterations = None
         return algorithm_choice, level_name, trajectories, timeframe, iterations, max_iterations
+
+def finetune_railnetwork(railnetwork):
+    trajectory_count = len(railnetwork)
+    for i in range(trajectory_count):
+        railnetwork[i] = '[' + ', '.join(railnetwork[i]) + ']'
+        print(railnetwork[i])
+
+    return railnetwork

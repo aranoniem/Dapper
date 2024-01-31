@@ -92,8 +92,6 @@ class Semi_random():
             visited_stations.add(random_neighbour)
             station = random_neighbour
         
-        #remove quotation marks
-        #trajectory = '[' + ', '.join(trajectory) + ']'
         print(trajectory)
         return duration, trajectory
     
@@ -107,3 +105,4 @@ class Semi_random():
         """
         random_station = random.choice(list(data.keys()))
         return random_station
+    

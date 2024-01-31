@@ -18,7 +18,7 @@ from code.algorithms.local_search import Local_search
 from code.algorithms.simulated_annealing import Simulated_annealing
 
 sys.path.append('functions')
-from functions.user_interface import get_user_input
+from functions.helpers import get_user_input, finetune_railnetwork
 
 sys.path.append('visualisation')
 from visualisation.coordinates import Railroadmap
@@ -45,27 +45,25 @@ if __name__ == '__main__':
     results = []
     best_quality_score = 0
 
-    if algorithm_choice == "hillclimber" or algorithm_choice == "local_search":
-        for i in range(iterations):
-            quality_score, railnetwork, temperature = algorithm.solve(trajectories, timeframe, max_iterations)
-            results.append(quality_score)
-            if quality_score > best_quality_score:
-                best_quality_score = quality_score
-                best_railnetwork = railnetwork
-    elif algorithm_choice == "simulated_annealing":
-        for i in range(iterations):
-            quality_score, railnetwork, temperature = algorithm.solve(trajectories, timeframe, 8000, 0.1)
-            results.append(quality_score)
-            if quality_score > best_quality_score:
-                best_quality_score = quality_score
-                best_railnetwork = railnetwork
-    else:
-        for i in range(iterations):
-            quality_score, railnetwork = algorithm.solve(trajectories, timeframe)
-            results.append(quality_score)
-            if quality_score > best_quality_score:
-                best_quality_score = quality_score
-                best_railnetwork = railnetwork
+    for i in range(iterations):
+        if algorithm_choice == "hillclimber" or algorithm_choice == "local_search":
+            print("in if")
+            quality_score, _railnetwork, temperature = algorithm.solve(trajectories, timeframe, max_iterations)
+        elif algorithm_choice == "simulated_annealing":
+            quality_score, _railnetwork, temperature = algorithm.solve(trajectories, timeframe, 8000, 0.1)
+        else:
+            quality_score, _railnetwork = algorithm.solve(trajectories, timeframe)
+
+        print(_railnetwork)
+        railnetwork = finetune_railnetwork(_railnetwork)
+        print(railnetwork)
+
+        #create results and find maximum solution
+        results.append(quality_score)
+        if quality_score > best_quality_score:
+            best_quality_score = quality_score
+            best_railnetwork = railnetwork
+
 
     # Create a directory called '' if it doesn't exist
     output_directory = 'plots'
@@ -87,12 +85,13 @@ if __name__ == '__main__':
     os.makedirs(output_directory, exist_ok=True)
 
     # Save railnetwork to CSV
-    railnetwork_csv_path = os.path.join(output_directory, f'{level_name}_{iterations}_{algorithm_choice}.csv')
+    #railnetwork_csv_path = os.path.join(output_directory, f'{level_name}_{iterations}_{algorithm_choice}.csv')
+    railnetwork_csv_path = os.path.join(output_directory, f'output.csv')
     with open(railnetwork_csv_path, 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(['train', 'stations'])
-        for i, trajectory in enumerate(best_railnetwork, start=1):
-            csv_writer.writerow([f'train_{i}', str(trajectory)])
+        for i in range(len(best_railnetwork)):
+            csv_writer.writerow([f'train_{i + 1}', str(best_railnetwork[i])])
         csv_writer.writerow(['score', best_quality_score])
     print("in csv")
     

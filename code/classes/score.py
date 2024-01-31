@@ -51,6 +51,7 @@ class Score(object):
 
         # Calculate p-value
         p = self.calc_p()
+        print(f"p:", p)
         # TEST: print(self.ridden_tracks)
         #print("\n")
         #print(f"{self.tracks} , x")
@@ -58,9 +59,11 @@ class Score(object):
 
         # the total amount of minutes in all trajectories
         T = self.calc_T(trajectories)
-
+        print(f"T:", T)
+        print(f"Min:", Min)
         # Formula for railnetwork quality
         self.K = p * 10000 - (T*100 + Min)
+        print(f"K:", self.K)
         return self.K
 
     def calc_p(self) -> float:

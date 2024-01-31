@@ -72,8 +72,10 @@ class Totally_random():
             random_neighbour = random.choice(neighbours)
 
             #stop making connections when timeframe is reached
-            duration += self.data[station].get_distance(random_neighbour)
+            distance = self.data[station].get_distance(random_neighbour)
+            duration += distance
             if duration > timeframe:
+                duration = duration - distance
                 break
 
             #add station to trajectory

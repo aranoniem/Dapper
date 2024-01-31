@@ -24,7 +24,7 @@ class Local_search(Hillclimber):
         post: return possibly improved railnetwork and score
         """
 
-        quality_score, railnetwork, total_time, _ = self.solve(timeframe, max_trajectory, max_iterations)
+        quality_score, railnetwork, total_time = Hillclimber.solve(max_trajectory,timeframe, max_iterations)
         print(f"qs", quality_score)
         iterations = 0
         print(f"total time", total_time)
