@@ -39,7 +39,7 @@ class Greedy_search:
         for i in range(max_trajectories):
 
             # Add a new trajectory to railnetwork
-            trajectory = self.generate_trajectory(timeframe)
+            trajectory = self.generate_greedy_trajectory(timeframe)
             self.trajectories.append(trajectory)
             self.calculate_time_trajectory(trajectory)
 
@@ -48,7 +48,7 @@ class Greedy_search:
         print(float(score.K))
         return (float(score.K), self.trajectories)
 
-    def generate_trajectory(self, timeframe):
+    def generate_greedy_trajectory(self, timeframe):
         """
         Creates a new trajectory from a random starting station within the timeframe. 
         Trajectory does not have the same connection twice.

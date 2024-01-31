@@ -10,7 +10,6 @@ import os
 import sys
 
 sys.path.append('../code')
-from algorithms.greedy import GreedySearch
 from classes.station import Station
 
 class Railroadmap:

@@ -10,22 +10,22 @@ class Local_search(Hillclimber):
     def __init__(self, level: str):
         """
         Initialize the algorithm and load all station objects
-
         pre: use the Load class
         post: a dictionary with all objects is initialized
         """
         super().__init__(level)  # Call the constructor of the parent class
-    
 
-    def solve(self, max_trajectory: int, timeframe: int, max_iterations: int) -> Tuple[float, List[Any]]:
+
+    def solve(self, timeframe: int, max_trajectory: int, max_iterations: int) -> Tuple[float, List[Any]]:
         """
         Create a solution where the beginning station and end station are removed for a better score
-
         pre: give a solution from the hillclimber algorithm
         post: return possibly improved railnetwork and score
         """
-        print(f"{max_trajectory},{timeframe}, {max_iterations}")
-        quality_score, railnetwork = super().solve(max_trajectory, timeframe, max_iterations)
+
+        quality_score, railnetwork = super().solve(timeframe, max_trajectory, max_iterations)
+        print(f"qs", quality_score)
+        iterations = 0
 
         #calculate total time of the trajectory
         total_time = 0
@@ -35,9 +35,6 @@ class Local_search(Hillclimber):
             time = trajectory.get_time()
             total_time += time
 
-
-        print(f"qs", quality_score)
-        iterations = 0
         print(f"total time", total_time)
 
         while iterations <= 1:
@@ -53,17 +50,27 @@ class Local_search(Hillclimber):
                 print(temp_trajectory)
                 temp_total_time = total_time - deleted_time
                 print(f"temp, tot, del", temp_total_time, total_time, deleted_time)
-                temp_quality_score = Score(self.level, railnetwork, temp_total_time).K
+                temp_railnetwork[i] = temp_trajectory
+                temp_quality_score = Score(self.level, temp_railnetwork, temp_total_time).K
                 print("temp_score", temp_quality_score)
-                print(temp_quality_score)
 
                 if temp_quality_score > quality_score:
                     print("in if")
-                    railnetwork[i] = temp_trajectory
+                    temp_railnetwork[i] = temp_trajectory.copy()
+                    railnetwork = temp_railnetwork
                     total_time = temp_total_time
                     quality_score = temp_quality_score
                     iterations = 0
 
+            iterations += 1
+            print(iterations)
+
+        iterations = 0
+        while iterations <= 1:
+            # start with the best solution
+            temp_railnetwork = railnetwork.copy()
+
+            for i in range(len(temp_railnetwork)):
                 # search if deleting the last station will improve the solution
                 temp_trajectory = temp_railnetwork[i].copy()
                 print(temp_trajectory)
@@ -73,18 +80,19 @@ class Local_search(Hillclimber):
                 print(temp_trajectory)
                 temp_total_time = total_time - deleted_time
                 print(f"temp, tot, del", temp_total_time, total_time, deleted_time)
-                temp_quality_score = Score(self.level, railnetwork, temp_total_time).K
+                temp_railnetwork[i] = temp_trajectory
+                temp_quality_score = Score(self.level, temp_railnetwork, temp_total_time).K
                 print("temp_score", temp_quality_score)
-                print(temp_quality_score)
 
                 if temp_quality_score > quality_score:
                     print("in if")
-                    railnetwork[i] = temp_trajectory
+                    temp_railnetwork[i] = temp_trajectory.copy()
+                    railnetwork = temp_railnetwork
                     total_time = temp_total_time
                     quality_score = temp_quality_score
                     iterations = 0
+
             iterations += 1
             print(iterations)
 
-        return quality_score, railnetwork, total_time          
-
+        return quality_score, railnetwork  
