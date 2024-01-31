@@ -63,6 +63,9 @@ if __name__ == '__main__':
 
     output_path = os.path.join(output_directory, f'{level_name}_{iterations}_{algorithm_choice}_map')
     plt.title(f'Optimizing Algorithm Performance: {algorithm_choice.capitalize()} Approach\nVisualisation at {level_name.capitalize()} Level')
+    plt.xlabel('Latitude')
+    plt.ylabel('Longitude')
+    plt.grid(True)
     plt.savefig(output_path)
 
     # Create a directory plots
