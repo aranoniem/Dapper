@@ -39,9 +39,7 @@ class Semi_random():
                                                             timeframe)
 
         # Show the trajectory of the random algorithm
-        print(railnetwork)
         quality_score = float(Score(self.level, railnetwork, total_time).K)
-        # Print(quality_score)
         return quality_score, railnetwork
 
     def generate_railnetwork(self, max_trajectory: int, 
@@ -112,5 +110,4 @@ class Semi_random():
             visited_stations.add(random_neighbour)
             station = random_neighbour
 
-        print(trajectory)
         return duration, trajectory
