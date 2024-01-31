@@ -1,8 +1,8 @@
-#Import libraries
+# Import libraries
 import random
-from typing import Any
+from typing import List, Tuple
 
-#Import classes
+# Import classes
 from code.classes.load import Load
 from code.classes.station import Station
 from code.classes.score import Score
@@ -10,9 +10,12 @@ from code.classes.score import Score
 # Import functions
 from code.functions.elements import get_random_station
 
+
 class Totally_random():
+
     """
-    create a solution based on making random trajectories and calculate their quality
+    create a solution based on making random trajectories
+    and calculate their quality
 
     pre: choose a level, a maximum amount of trajectories and a timeframe
     post: return the railnetwork of the outcome and a quality score
@@ -29,15 +32,14 @@ class Totally_random():
         self.data = Load(level).objects
         self.level = level
 
-        
-    def solve(self, max_trajectory: int, timeframe: int) -> float:
+    def solve(self, max_trajectory: int, timeframe: int) -> Tuple[float, List[List[str]]:
         """
         Create a random railnetwork and calculate their score
 
         pre: choose a level, a maximum amount of trajectories and a timeframe
         post: returns a random railnetwork and their quality score
         """
-        total_time, railnetwork = self.generate_railnetwork(max_trajectory, 
+        total_time, railnetwork = self.generate_railnetwork(max_trajectory,
                                                             timeframe)
 
         # Show the trajectory of the random algorithm
@@ -45,7 +47,7 @@ class Totally_random():
 
         return quality_score, railnetwork
 
-    def generate_railnetwork(self, max_trajectory: int, 
+    def generate_railnetwork(self, max_trajectory: int,
                              timeframe: int) -> float:
         """
         generate a railnetwork based on randomly generated trajectories
