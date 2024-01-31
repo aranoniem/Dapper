@@ -49,15 +49,13 @@ if __name__ == '__main__':
     for i in range(iterations):
         if algorithm_choice == "hillclimber" or algorithm_choice == "local_search":
             print("in if")
-            quality_score, _railnetwork, temperature = algorithm.solve(trajectories, timeframe, max_iterations)
+            quality_score, railnetwork, _ = algorithm.solve(trajectories, timeframe, max_iterations)
         elif algorithm_choice == "simulated_annealing":
-            quality_score, _railnetwork, temperature = algorithm.solve(trajectories, timeframe, 8000, 0.1)
+            quality_score, railnetwork, temperature = algorithm.solve(trajectories, timeframe, 8000, 0.1)
         else:
-            quality_score, _railnetwork = algorithm.solve(trajectories, timeframe)
+            quality_score, railnetwork = algorithm.solve(trajectories, timeframe)
 
-        print(_railnetwork)
-        railnetwork = finetune_railnetwork(_railnetwork)
-        print(railnetwork)
+        railnetwork = finetune_railnetwork(railnetwork)
 
         #create results and find maximum solution
         results.append(quality_score)

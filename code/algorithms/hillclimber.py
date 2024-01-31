@@ -55,7 +55,7 @@ class Hillclimber(Semi_random):
             print(self.iterations)
 
         print(quality_score, railnetwork)
-        return quality_score, railnetwork, total_time
+        return quality_score, railnetwork
 
     def remove_trajectory(self, quality_score: float, railnetwork: List[Any], total_time: int) -> Tuple[float, List[Any], int]:
         """

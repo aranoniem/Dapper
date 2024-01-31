@@ -4,6 +4,7 @@ from typing import Any, List, Tuple
 # Import classes
 from .hillclimber import Hillclimber  # Import hillclimber class
 from code.classes.score import Score
+from code.classes.trajectory import Trajectory
 
 class Local_search(Hillclimber):
     def __init__(self, level: str):
@@ -24,7 +25,17 @@ class Local_search(Hillclimber):
         post: return possibly improved railnetwork and score
         """
         print(f"{max_trajectory},{timeframe}, {max_iterations}")
-        quality_score, railnetwork, total_time = Hillclimber.solve(max_trajectory, timeframe, max_iterations)
+        quality_score, railnetwork = super().solve(max_trajectory, timeframe, max_iterations)
+
+        #calculate total time of the trajectory
+        total_time = 0
+        for i in range(len(railnetwork)):
+            trajectory = Trajectory(railnetwork[i], self.data)
+            trajectory.calc_time()
+            time = trajectory.get_time()
+            total_time += time
+
+
         print(f"qs", quality_score)
         iterations = 0
         print(f"total time", total_time)
@@ -75,5 +86,5 @@ class Local_search(Hillclimber):
             iterations += 1
             print(iterations)
 
-        return quality_score, railnetwork           
+        return quality_score, railnetwork, total_time          
 

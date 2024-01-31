@@ -9,7 +9,7 @@ def get_user_input():
 
         algorithm_choice = input("What algorithm do you want to run? (totally_random, semi_random, greedy_search, breadth_first, depth_first, hillclimber, local_search, or simulated_annealing): ").lower()
 
-    level_name = input("Enter the level name (Nationaal or Holland): ").lower()
+    level_name = input("Enter the level name (Nationaal or Holland): ")
 
     while level_name.lower() not in ['nationaal', 'holland']:
         if level_name.lower() not in ['nationaal', 'holland']:
