@@ -18,7 +18,7 @@ pip install -r requirements.txt
 ```
 
 ### Usage
-The program can be used with two datasets: Holland and Nationaal. You could use either by calling it in the place of “dataset”, or when using Holland to leave “dataset” empty.
+The program can run by executing the following command in your terminal:
 
 ```
 python3 main.py
@@ -62,6 +62,7 @@ We have created multiple algorithms to use in the project. To give an overview:
 * Hillclimber
 * Local Search
 * Two Random algorithms
+
 The algorithms will be shortly explained in the paragraphs below.
 
 ### BreadthFirst
