@@ -14,7 +14,7 @@ cd Dapper
 In requirements.txt are packages needed to run this directory smoothly. These are easily installed via pip, using the following command:
 
 ```
-pip install - r requirements.txt
+pip install -r requirements.txt
 ```
 
 ### Usage

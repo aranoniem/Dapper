@@ -239,7 +239,7 @@ class Depth_first():
             if len(railnetwork) >= max_trajectory:
                 break
         print(f'railnetwork:', railnetwork, 'score:', self.best_value)
-        return railnetwork and self.best_value
+        return (self.best_value, railnetwork)
 
     def calc_total_time(self, railnetwork):
         total_time = 0
