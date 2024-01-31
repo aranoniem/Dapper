@@ -56,6 +56,8 @@ if __name__ == '__main__':
             quality_score, railnetwork = algorithm.solve(trajectories, timeframe)
 
         railnetwork = finetune_railnetwork(railnetwork)
+        if i == 0:
+            best_railnetwork = railnetwork.copy()
 
         #create results and find maximum solution
         results.append(quality_score)
