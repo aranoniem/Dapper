@@ -1,20 +1,16 @@
-# Import libraries
-from typing import Any
-
 class Trajectory():
 
     def __init__(self, trajectory, data):
         self.trajectory = trajectory
         self.time = 0
-        self.data = data # Data from stations class
+        self.data = data  # Data from stations class
 
     def get_time(self):
         """Returns time of trajectory"""
         return self.time
-    
+
     def calc_time(self) -> None:
         """Calculate time of the trajectory"""
-        # Make sure self.time doesn't get corrupted
         if self.time == 0:
 
             # Iterate over the indices of the stations

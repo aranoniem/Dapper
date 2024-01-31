@@ -1,7 +1,7 @@
-from typing import Any
+from typing import Any, Dict
+
 
 class Station:
-    
     def __init__(self, id, name, latitude, longitude) -> None:
         """
         Initialize a station as an object with an id, coordinates and a name
@@ -12,7 +12,7 @@ class Station:
         self.name = name
         self.latitude = latitude
         self.longitude = longitude
-        self.connections = {}
+        self.connections: Dict[str, str] = {}
 
     def add_connection(self, connection, distance) -> None:
         """
@@ -29,7 +29,6 @@ class Station:
         pre: Name of the destination station
         post: Distance to the specified destination in minutes
         """
-        
         return list(self.connections.keys())
 
     def get_distance(self, arrival_station) -> Any:
@@ -40,6 +39,6 @@ class Station:
         post: Distance to the specified destination in minutes
         """
         return self.connections.get(arrival_station)
-    
+
     def __str__(self):
         return f"{self.name}"

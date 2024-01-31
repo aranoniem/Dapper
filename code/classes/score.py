@@ -1,5 +1,5 @@
-
 from classes.load import Load
+
 
 class Score(object):
     """Calculate railnetwork quality score"""
@@ -25,7 +25,7 @@ class Score(object):
         for trajectory in trajectories:
 
             # Iterate over stations within a trajectory
-            for i in range (len(trajectory) - 1):
+            for i in range(len(trajectory) - 1):
 
                 # Put station and connecting station together
                 journey = (trajectory[i], trajectory[i+1])
@@ -37,7 +37,6 @@ class Score(object):
                 self.ridden_tracks.add(journey)
 
         return self.ridden_tracks
-
 
     def calculate_score(self, trajectories: list, Min: int) -> float:
         """
@@ -51,23 +50,17 @@ class Score(object):
 
         # Calculate p-value
         p = self.calc_p()
-        print(f"p:", p)
-        # TEST: print(self.ridden_tracks)
-        #print("\n")
-        #print(f"{self.tracks} , x")
-        #print(p)
 
         # the total amount of minutes in all trajectories
         T = self.calc_T(trajectories)
         # Formula for railnetwork quality
         self.K = p * 10000 - (T*100 + Min)
-        print(f"K:", self.K)
         return self.K
 
     def calc_p(self) -> float:
         """
         Calculates fraction of ridden tracks
-        
+
         post: returns float between 0 and 1
         """
         total_tracks = len(self.tracks)
@@ -77,13 +70,10 @@ class Score(object):
     def calc_T(self, trajectories) -> int:
         """"
         Calculates total amount of trajectories
-        
+
         post: returns integer
         """
         return len(trajectories)
-    
+
     def __str__(self):
         return f"{self.K}"
-        
-
-

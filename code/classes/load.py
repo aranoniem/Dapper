@@ -1,8 +1,9 @@
-#import libraries
+# import libraries
 import pandas as pd
 
 # import classes
 from classes.station import Station
+
 
 class Load():
     """
@@ -12,7 +13,7 @@ class Load():
 
     def __init__(self, level: str) -> None:
         """
-        Load stations, connections between stations, and coordinates of stations.
+        Load stations, connections of stations, and coordinates of stations.
 
         Pre: part of filename of railwaydata is specified.
         Post: all data (stations, connections, coordinates, distances)
@@ -22,13 +23,12 @@ class Load():
         self.objects: dict[str, dict] = {}
 
         # Stores tracks alphabetically in tuples
-        self.tracks: set[str] = set() 
+        self.tracks: set[str] = set()
 
         # Load datastructure into memory
         self.load_stations(f'data/Stations{level}.csv')
         self.load_connections(f'data/Connecties{level}.csv')
         self.load_tracks(f'data/Connecties{level}.csv')
-        
 
     def load_stations(self, filename: str) -> dict:
         """
@@ -53,8 +53,6 @@ class Load():
             self.objects[_station] = Station(id, _station, latitude, longitude)
             id += 1
 
-        #TEST print(self.objects)
-
         return self.objects
 
     def load_connections(self, filename: str) -> dict:
@@ -73,17 +71,16 @@ class Load():
             arrival_station = row['station2']
             distance = row['distance']
 
-            # Connecting both stations to each other, with the distance between them
+            # Connecting both stations to eachother
             self.objects[departure_station].add_connection(arrival_station, distance)
             self.objects[arrival_station].add_connection(departure_station, distance)
-            #TEST print(self.objects[departure_station])
 
         return self.objects
 
     def load_tracks(self, filename: str) -> set:
         """
         Load alphabetically sorted tracks into memory
-        
+
         Pre: filename of railway data is specified
         Post: connected stations are loaded into memory in tuples
         """
@@ -94,16 +91,12 @@ class Load():
         for index, row in df.iterrows():
             departure_station = row['station1']
             arrival_station = row['station2']
-            distance = row['distance']
 
             # Sort the stations alphabetically
             sorted_stations = (departure_station, arrival_station)
             sorted_stations = tuple(sorted(sorted_stations))
 
-            # Connecting both stations to each other, with the distance between them (tuples)
+            # Connecting both stations to each other
             self.tracks.add(sorted_stations)
-            #TEST STATEMENT print(self.tracks[sorted_stations[0]], sorted_stations[0])
 
         return self.tracks
-
-            
