@@ -3,33 +3,32 @@ import random
 import math
 
 # Import classes
-from code.classes.load import Load
 from code.classes.station import Station
 from code.classes.score import Score
 
-# Import functions
-from code.functions.elements import get_random_station
+# Import parent
+from .semi_random import Semi_random
 
-class Simulated_annealing:
+class Simulated_annealing(Semi_random):
+
     def __init__(self, level: str):
-        self.data = Load(level).objects
-        self.level = level
-        self.total_time = 0
+        super().__init__(level)
 
-    def solve(self, num_trajectories: int, timeframe: int, initial_temperature: float, cooling_rate: float) -> tuple:
-        best_score = None
+
+    def solve(self, max_trajectory: int, timeframe: int, initial_temperature: float, cooling_rate: float) -> tuple:
+        best_score = 0
         best_railnetwork = None
 
         current_temperature = initial_temperature
 
-        railnetwork = self.initial_solution(num_trajectories, timeframe)
-        current_score = float(str(Score(self.level, railnetwork, self.total_time)))
+        railnetwork, total_time = self.generate_railnetwork(max_trajectory, timeframe)
+        current_score = float(str(Score(self.level, railnetwork, total_time)))
         
         temperatures = []  # Store temperatures
         
         while current_temperature > 10:
-            new_railnetwork = self.random_neighbor(railnetwork)
-            new_score = float(str(Score(self.level, new_railnetwork, self.total_time)))
+            new_railnetwork = self.swap_trajectory(railnetwork, timeframe)
+            new_score = float(str(Score(self.level, new_railnetwork, total_time)))
             
             # if the randomly generated number between 0 and 1 is smaller than the acceptance probability
             if self.acceptance_probability(current_score, new_score, current_temperature) > random.random():
@@ -41,7 +40,7 @@ class Simulated_annealing:
             print(railnetwork)
             print(current_score)
                 
-            # update the temperature because the cooling rate is basically the percentage that is removed each iteration so 1 - cooling rate is the growth factor
+            # Update the temperature because the cooling rate is basically the percentage that is removed each iteration so 1 - cooling rate is the growth factor
             current_temperature *= (1 - cooling_rate)
 
             if best_score is None or current_score > best_score:
@@ -49,57 +48,17 @@ class Simulated_annealing:
                 best_railnetwork = railnetwork
 
         if best_score is not None:
-            return best_score, best_railnetwork, temperatures
+            return best_score, best_railnetwork
         else:
             return float('inf'), None, temperatures
 
-    def initial_solution(self, num_trajectories: int, timeframe: int) -> list:
-        railnetwork = []
-        self.total_time = 0
-        
-        # for every route
-        for _ in range(num_trajectories):
-            trajectory = []
-            visited_stations = set()
-            duration = 0
-    
-            while True:
-                # start from a random station not visited before
-                if not trajectory:
-                    station = get_random_station(self.data)
-                else:
-                    neighbors = self.data[trajectory[-1]].get_connections()
-                    unvisited_neighbors = [n for n in neighbors if n not in visited_stations]
-    
-                    if not unvisited_neighbors:
-                        break  # no unvisited neighbors, end the trajectory
-                    station = random.choice(unvisited_neighbors)
-    
-                # calculate the distance to the new station
-                if trajectory:
-                    distance = self.data[trajectory[-1]].get_distance(station)
-                    duration += distance
-                    self.total_time += distance
-    
-                # check if the trajectory exceeds the timeframe
-                if duration > timeframe:
-                    break
-    
-                # add the station to the trajectory and update visited stations
-                trajectory.append(station)
-                visited_stations.add(station)
-    
-            railnetwork.append(trajectory)
-    
-        return railnetwork
-
-    def random_neighbor(self, railnetwork: list) -> list:
-        # make a copy to be able to adjust a single route
+    def swap_trajectory(self, railnetwork: list, timeframe: int) -> list:
+        # Make a copy to be able to adjust a single route
         new_railnetwork = railnetwork.copy()
 
-        # choose a random trajectory and replace it with a new one
+        # Choose a random trajectory and replace it with a new one
         random_trajectory_index = random.randint(0, len(new_railnetwork) - 1)
-        new_railnetwork[random_trajectory_index] = self.initial_solution(1, float('inf'))[0]
+        new_railnetwork[random_trajectory_index] = self.generate_trajectory(timeframe)
 
         return new_railnetwork
 
