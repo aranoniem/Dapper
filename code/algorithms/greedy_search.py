@@ -1,19 +1,27 @@
+# Import libraries
+from typing import Any, List, Tuple, Set
+
 # Import classes
 from code.classes.load import Load
-from code.classes.station import Station
 from code.classes.score import Score
 
 # Import functions
 from code.functions.elements import get_random_station
 
+
 class Greedy_search:
+    """
+    Creates a railnetwork from random stations with the shortest time
+    between stations as the first chosen connections, up until a time
+    maximum is reached
+    """
     def __init__(self, level):
         """
         Initialse variables needed for algorithm and load all data
 
         pre: file name for data loading
         post: loads (the connections between) stations into memory,
-        initializes a trajectories list of found trajectories and a 
+        initializes a trajectories list of found trajectories and a
         time counter.
         """
         self.level = level
@@ -22,15 +30,15 @@ class Greedy_search:
         self.connections = Load(level).objects
 
         # Counter for the score calculation
-        # BUG, gebruikt waar??
         self.total_time_for_trajectories = 0
 
         # List to keep track of found trajectories in railnetwork
         self.trajectories = []
 
-    def solve(self, max_trajectories, timeframe):
+    def solve(self, max_trajectories, timeframe) -> Tuple:
         """
-        Generates (max_trajectories) number of trajectories and adds it to the list of trajectories.
+        Generates (max_trajectories) number of trajectories and adds it
+        to the list of trajectories.
 
         pre: amount of trajectories, amount of time for one trajectory
         post: qualityscore (K) and all trajectories (lists in a list)
@@ -45,13 +53,12 @@ class Greedy_search:
 
         # Calculate qualityscore of railnetwork
         score = Score(self.level, self.trajectories, self.total_time_for_trajectories)
-        print(float(score.K))
         return (float(score.K), self.trajectories)
 
-    def generate_greedy_trajectory(self, timeframe):
+    def generate_greedy_trajectory(self, timeframe) -> List[str]:
         """
-        Creates a new trajectory from a random starting station within the timeframe. 
-        Trajectory does not have the same connection twice.
+        Creates a new trajectory from a random starting station within
+        the timeframe. Trajectory does not have the same connection twice.
 
         pre: maximum amount of time trajectory may be
         post: returns a trajectory without duplicates
@@ -62,7 +69,7 @@ class Greedy_search:
 
         # Keep track of time
         total_time = 0
-        visited_stations = set()
+        visited_stations: Set[str] = set()
 
         while total_time <= timeframe:
             next_station = self.choose_next_station(current_station, visited_stations)
@@ -83,9 +90,10 @@ class Greedy_search:
 
         return trajectory
 
-    def choose_next_station(self, current_station, visited_stations):
+    def choose_next_station(self, current_station, visited_stations) -> Any:
         """
-        Adds a new station to the trajectory if it's the closest neighbor and the station was not visited previously.
+        Adds a new station to the trajectory if it's the closest
+        neighbor and the station was not visited previously.
 
         pre: one stations and a list of stations
         post: return
@@ -93,7 +101,8 @@ class Greedy_search:
         # Retrieves stations that are connected to current station
         connections_list = self.connections[current_station].get_connections()
 
-        # Create a list of connections to current station that have not yet been visited
+        # Create a list of connections to current station that have not
+        # yet been visited
         unvisited_neighbors = [neighbor for neighbor in connections_list if neighbor not in visited_stations]
 
         # If a dead end is reached
@@ -111,7 +120,7 @@ class Greedy_search:
         """
         self.total_time_for_trajectories += sum(self.time_between_stations(trajectory))
 
-    def time_between_stations(self, trajectory) -> list:
+    def time_between_stations(self, trajectory) -> List[int]:
         """
         Returns a list of the distances between stations.
 
