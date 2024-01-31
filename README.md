@@ -24,40 +24,43 @@ The program can be used with two datasets: Holland and Nationaal. You could use 
 python3 main.py
 ```
 
-This will prompt you for an algorithm with which you would like create a rail network, at what level you want your algorithm, how many trajectories can be used as a maximum, how long each trajectory may be timewise and how many iterations you would prefer. If it is an iterative algorithm it will also ask the program will also ask for the maximum amount of iterations one iteration can have without a better solution.
+This will prompt you for an algorithm with which you would like create a rail network, at what level you want your algorithm, how many trajectories can be used as a maximum, how long each trajectory may be timewise and how many iterations you would prefer. If it is an iterative algorithm it will also ask the user for the maximum amount of iterations one iteration can have without a better solution.
 
+#### Example
 The recommended parameters for Holland:
 * a maximum trajectory of 7
 * a maximum timeframe of 120
 * 10000 iterations
 * for iterative algorithms: max 120 iterations without change and 40 iterations total
 
-The recommended parameters for Holland:
+The recommended parameters for Nationaal:
 * a maximum trajectory of 20
 * a maximum timeframe of 180
 * 10000 iterations
 * for iterative algorithms: max 250 iterations without change and 20 iterations total
 
- After that it will output the generated rail network and its quality score (K).
+After running, the program will output the generated rail network and its quality score (K), together with the map of the railnetwork. The output can be found in the directory csv_files, and the map can be found in the directory maps.
 
 ### Structure 
 The following list describes the organization of the directory and its most important components.
-* **/code**: contains all the code of this project
+* **/code**: contains all the code of this project, except for visualisation
     * **/algorithms**: contains all the algorithms available for creating a railnetwork
     * **/classes**: contains 4 classes; 3 to store data and 1 load data into memory
-    * **/visualisation**: contains files for visual images of the railnetwork
+    * **/functions**: contains files with functions needed in other parts of the code
 * **/data**: contains datafiles of stations and connections. Two files per area.
-* **/images**: contains images of railnetwork visualisation and output
-* **/plots**: contains histograms of experiments with algorithms
-* **/result_csv**: contains data from experimenting with algorithms
-* **/shapefile_for_visualisation**: contains files necessary to load the map of the created rail network
+* **/results**: contains all the results from running the program
+    * **/csv_files**: contains all the output from each run
+    * **/plots**: contains the histograms from each run
+    * **/maps**: contains images from visualisation of railnetwork of each run
+* **/visualisation**: contains all the code for visualisation of the railnetwork
 
 ## Algorithms
 We have created multiple algorithms to use in the project. To give an overview:
 * BreadthFirst
 * DepthFirst
-* Greedy
-* Two Local Searches
+* Greedy Search
+* Hillclimber
+* Local Search
 * Two Random algorithms
 The algorithms will be shortly explained in the paragraphs below.
 
@@ -82,12 +85,10 @@ Semi_random will make a random amount of random trajectories, based on random st
 ### Totally-Random
 Totally_random will make a random amount of random trajectories, based on random startingstations.
 
-## Visualization (todo: plaatjes maken van up to date staat en toevoegen)
-### map visualisation
-![Map visualisation](/images/RailNL_output_fullyrandom.jpg)
+## Visualization
+Example map, of fullyrandom algorithm.
+![Map visualisation](/results/maps/RailNL_output_fullyrandom.PNG)
 
-### our current output
-![Current output](/images/)
 ## Authors
 * Paco van der Vliet
 * David Verboom

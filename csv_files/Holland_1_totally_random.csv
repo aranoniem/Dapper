@@ -1,7 +1,0 @@
-train,stations
-train_1,"['Haarlem', 'Amsterdam Sloterdijk', 'Haarlem', 'Amsterdam Sloterdijk', 'Zaandam', 'Hoorn', 'Alkmaar', 'Hoorn']"
-train_2,"['Den Haag Centraal', 'Leiden Centraal', 'Alphen a/d Rijn', 'Gouda', 'Rotterdam Alexander', 'Gouda', 'Den Haag Centraal', 'Gouda', 'Alphen a/d Rijn']"
-train_3,"['Amsterdam Sloterdijk', 'Haarlem', 'Amsterdam Sloterdijk', 'Zaandam', 'Beverwijk', 'Haarlem', 'Heemstede-Aerdenhout', 'Haarlem', 'Heemstede-Aerdenhout', 'Haarlem', 'Heemstede-Aerdenhout', 'Haarlem', 'Amsterdam Sloterdijk']"
-train_4,"['Schiedam Centrum', 'Delft', 'Den Haag Centraal', 'Gouda', 'Den Haag Centraal', 'Gouda', 'Alphen a/d Rijn', 'Gouda']"
-train_5,"['Castricum', 'Beverwijk', 'Castricum', 'Zaandam', 'Castricum', 'Zaandam', 'Beverwijk', 'Zaandam']"
-score,4552.285714285714
