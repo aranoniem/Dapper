@@ -41,8 +41,6 @@ if __name__ == '__main__':
     for i in range(iterations):
         if algorithm_choice == "hillclimber" or algorithm_choice == "local_search":
             quality_score, railnetwork = algorithm.solve(trajectories, timeframe, max_iterations)
-        elif algorithm_choice == "simulated_annealing":
-            quality_score, railnetwork = algorithm.solve(trajectories, timeframe, 8000, 0.1)
         else:
             quality_score, railnetwork = algorithm.solve(trajectories, timeframe)
 

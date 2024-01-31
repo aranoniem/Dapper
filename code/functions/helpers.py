@@ -9,14 +9,14 @@ def get_user_input() -> Any:
     """
     algorithm_choice: str = get_algorithm()
     level_name: str = get_level()
-    trajectories: int = get_max_trajectories() 
+    trajectories: int = get_max_trajectories()
     timeframe: int = get_timeframe()
     iterations: int = get_iterations()
-    if algorithm_choice in ['hillclimber', 'local_search', 'simulated_annealing']:
+    if algorithm_choice in ['hillclimber', 'local_search']:
         max_iterations: Any = get_max_iterations()
     else:
-        max_iterations = None   
-    
+        max_iterations = None
+
     return algorithm_choice, level_name, trajectories, timeframe, iterations, max_iterations
 
 def get_algorithm() -> str:
@@ -26,12 +26,12 @@ def get_algorithm() -> str:
     post: returns algorithm of choice
     """
     # Prompt user for input
-    algorithm_choice: Any = input("What algorithm do you want to run? (totally_random, semi_random, greedy_search, breadth_first, depth_first, hillclimber, local_search, or simulated_annealing): ").lower()
+    algorithm_choice: Any = input("What algorithm do you want to run? (totally_random, semi_random, greedy_search, breadth_first, depth_first, hillclimber or local_search): ").lower()
 
     # Check if algorithm is among correct ones, prompt user again if not
-    while algorithm_choice not in ['totally_random', 'semi_random', 'greedy_search', 'breadth_first', 'depth_first', 'hillclimber', 'local_search', 'simulated_annealing']:
+    while algorithm_choice not in ['totally_random', 'semi_random', 'greedy_search', 'breadth_first', 'depth_first', 'hillclimber', 'local_search']:
         print("Invalid algorithm choice. Please choose a valid algorithm.")
-        algorithm_choice = input("What algorithm do you want to run? (totally_random, semi_random, greedy_search, breadth_first, depth_first, hillclimber, local_search, or simulated_annealing): ").lower()
+        algorithm_choice = input("What algorithm do you want to run? (totally_random, semi_random, greedy_search, breadth_first, depth_first, hillclimber or local_search): ").lower()
     return algorithm_choice
 
 def get_level() -> str:
@@ -96,7 +96,7 @@ def get_iterations() -> int:
 
 def get_max_iterations() -> Any:
     """
-    Get max iterations for usage of hillclimber, local search or simulated annealing
+    Get max iterations for usage of hillclimber or local search
 
     post: returns integer
     """
@@ -119,6 +119,5 @@ def finetune_railnetwork(railnetwork) -> list:
     trajectory_count: int = len(railnetwork)
     for i in range(trajectory_count):
         railnetwork[i] = '[' + ', '.join(railnetwork[i]) + ']'
-        #TEST print(railnetwork[i])
 
     return railnetwork
