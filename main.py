@@ -19,6 +19,7 @@ from code.algorithms.simulated_annealing import Simulated_annealing
 
 sys.path.append('functions')
 from functions.helpers import get_user_input, finetune_railnetwork
+from functions.elements import get_random_station
 
 sys.path.append('visualisation')
 from visualisation.coordinates import Railroadmap

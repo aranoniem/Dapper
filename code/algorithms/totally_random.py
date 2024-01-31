@@ -7,6 +7,9 @@ from code.classes.load import Load
 from code.classes.station import Station
 from code.classes.score import Score
 
+# Import functions
+from code.functions.elements import get_random_station
+
 class Totally_random():
     """
     create a solution based on making random trajectories and calculate their quality
@@ -61,7 +64,7 @@ class Totally_random():
         return total_time, railnetwork
     
     def generate_trajectory(self, timeframe):
-        station = self.random_station(self.data)
+        station = get_random_station(self.data)
         trajectory = [station]
         visited_stations = {station}
         duration = 0
@@ -86,14 +89,3 @@ class Totally_random():
             station = random_neighbour
         
         return duration, trajectory
-    
-
-    def random_station(self, data: dict): 
-        """
-        find a random station for the purpose of a starting point
-
-        pre: enter the data that a random station is picked from
-        post: returns a random station
-        """
-        random_station = random.choice(list(data.keys()))
-        return random_station

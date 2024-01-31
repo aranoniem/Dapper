@@ -1,9 +1,14 @@
+# Import libraries
 import random
 import math
 
+# Import classes
 from code.classes.load import Load
 from code.classes.station import Station
 from code.classes.score import Score
+
+# Import functions
+from code.functions.elements import get_random_station
 
 class Simulated_annealing:
     def __init__(self, level: str):
@@ -61,7 +66,7 @@ class Simulated_annealing:
             while True:
                 # start from a random station not visited before
                 if not trajectory:
-                    station = self.random_station(self.data)
+                    station = get_random_station(self.data)
                 else:
                     neighbors = self.data[trajectory[-1]].get_connections()
                     unvisited_neighbors = [n for n in neighbors if n not in visited_stations]
@@ -87,10 +92,6 @@ class Simulated_annealing:
             railnetwork.append(trajectory)
     
         return railnetwork
-
-
-    def random_station(self, data: dict) -> str:
-        return random.choice(list(data.keys()))
 
     def random_neighbor(self, railnetwork: list) -> list:
         # make a copy to be able to adjust a single route

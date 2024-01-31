@@ -1,10 +1,13 @@
-#Import libraries
+# Import libraries
 import random
 from typing import Any
 
-#Import classes
+# Import classes
 from code.classes.load import Load
 from code.classes.score import Score
+
+# Import functions
+from code.functions.elements import get_random_station
 
 class Semi_random():
     """
@@ -60,7 +63,7 @@ class Semi_random():
         return total_time, railnetwork
     
     def generate_trajectory(self, timeframe):
-        station = self.random_station(self.data)
+        station = get_random_station(self.data)
         trajectory = [station]
         visited_stations = {station}
         duration = 0
@@ -93,16 +96,4 @@ class Semi_random():
             station = random_neighbour
         
         print(trajectory)
-        return duration, trajectory
-    
-
-    def random_station(self, data: dict): 
-        """
-        find a random station for the purpose of a starting point
-
-        pre: enter the data that a random station is picked from
-        post: returns a random station
-        """
-        random_station = random.choice(list(data.keys()))
-        return random_station
-    
+        return duration, trajectory    

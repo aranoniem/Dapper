@@ -1,7 +1,7 @@
-import random
 from code.classes.load import Load
 from code.classes.station import Station
 from code.classes.score import Score
+from code.functions.elements import get_random_station
 
 class Greedy_search:
     def __init__(self, level):
@@ -16,34 +16,35 @@ class Greedy_search:
         self.total_time_for_trajectories = 0
         self.trajectories = []
 
-    def solve(self, timeframe, max_time):
+    def solve(self, max_trajectories, timeframe):
         """
-        Generates (timeframe) routes and adds the routes to the list of routes.
-        """
-        self.total_time_for_trajectories = 0
-        self.trajectories = []
+        Generates (max_trajectories) number of routes and adds the routes to the list of routes.
 
-        for i in range(timeframe):
-            route = self._generate_route(max_time)
+        pre: amount of trajectories, amount of time for one trajectory
+        post: qualityscore (K) and all trajectories (lists in a list)
+        """
+
+        for i in range(max_trajectories):
+            route = self.generate_trajectory(timeframe)
             self.trajectories.append(route)
-            self._update_trajectories(route)
+            self.update_trajectories(route)
 
         score = Score(self.level, self.trajectories, self.total_time_for_trajectories)
         print(float(score.K))
-        return float(score.K)
+        return (float(score.K), self.trajectories)
 
-    def _generate_route(self, max_time):
+    def generate_trajectory(self, timeframe):
         """
-        Picks a random station to start from and then makes a route shorter or equal to max_time;
+        Picks a random station to start from and then makes a route shorter or equal to timeframe;
         that does not use the same connection twice.
         """
-        current_station = self._choose_random_station()
+        current_station = get_random_station(self.connections)
         route = [current_station]
         total_time = 0
         visited_stations = set()
 
-        while total_time <= max_time:
-            next_station = self._choose_next_station(current_station, visited_stations)
+        while total_time <= timeframe:
+            next_station = self.choose_next_station(current_station, visited_stations)
 
             # If a dead end is reached
             if next_station is None:
@@ -51,7 +52,7 @@ class Greedy_search:
 
             connection_distance = self.connections[current_station].get_distance(next_station)
 
-            if total_time + connection_distance <= max_time:
+            if total_time + connection_distance <= timeframe:
                 route.append(next_station)
                 total_time += connection_distance
                 visited_stations.add(current_station)
@@ -61,10 +62,7 @@ class Greedy_search:
 
         return route
 
-    def _choose_random_station(self):
-        return random.choice(list(self.connections.keys()))
-
-    def _choose_next_station(self, current_station, visited_stations):
+    def choose_next_station(self, current_station, visited_stations):
         """
         Adds a new station to the route if it's the closest neighbor and the station was not visited previously.
         """
@@ -77,15 +75,15 @@ class Greedy_search:
 
         return min(unvisited_neighbors, key=lambda x: self.connections[current_station].get_distance(x))
 
-    def _update_trajectories(self, route):
+    def update_trajectories(self, route):
         """
         Update the list of trajectories by appending the new route and color.
         """
-        self.total_time_for_trajectories += sum(self._calculate_total_time(route))
+        self.total_time_for_trajectories += sum(self.calculate_total_time(route))
 
         print(f"Found route {len(self.trajectories)}: {route}")
 
-    def _calculate_total_time(self, route):
+    def calculate_total_time(self, route):
         """
         Retrieves the sum of the distances between stations.
         """

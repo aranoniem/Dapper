@@ -1,13 +1,15 @@
 # Import libraries
 from typing import Any
 import copy
-from random import choice #BUG? veranderd maar werking nog niet gecheckt
 
 # Import classes
 from code.classes.load import Load
 from code.classes.station import Station
 from code.classes.score import Score
 from code.classes.trajectory import Trajectory
+
+# Import functions
+from code.functions.elements import get_random_station
 
 class Depth_first():
     """
@@ -42,7 +44,7 @@ class Depth_first():
         self.best_value = 0
 
         # Get the starting station
-        self.random_station = self.random_station()
+        self.random_station = get_random_station(self.data)
         # FOR TESTING PURPOSES: self.random_station = 'Utrecht Centraal'
 
         # Add starting station to stack
@@ -50,16 +52,6 @@ class Depth_first():
 
         # Add starting station to visited stations
         self.visited_stations = [self.random_station]
-
-    def random_station(self): 
-        """
-        Find a random station for the purpose of a starting point
-
-        pre: data that a random station is picked from
-        post: returns one station
-        """
-        random_station = choice(list(self.data))
-        return random_station
 
     def get_next_trajectory(self):
         """
