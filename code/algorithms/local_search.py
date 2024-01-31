@@ -16,15 +16,15 @@ class Local_search(Hillclimber):
         super().__init__(level)  # Call the constructor of the parent class
     
 
-    def solve(self, timeframe: int, max_trajectory: int, max_iterations: int) -> Tuple[float, List[Any]]:
+    def solve(self, max_trajectory: int, timeframe: int, max_iterations: int) -> Tuple[float, List[Any]]:
         """
         Create a solution where the beginning station and end station are removed for a better score
 
         pre: give a solution from the hillclimber algorithm
         post: return possibly improved railnetwork and score
         """
-
-        quality_score, railnetwork, total_time = Hillclimber.solve(max_trajectory,timeframe, max_iterations)
+        print(f"{max_trajectory},{timeframe}, {max_iterations}")
+        quality_score, railnetwork, total_time = Hillclimber.solve(max_trajectory, timeframe, max_iterations)
         print(f"qs", quality_score)
         iterations = 0
         print(f"total time", total_time)
