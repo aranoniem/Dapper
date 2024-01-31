@@ -67,6 +67,7 @@ if __name__ == '__main__':
     plt.ylabel('Longitude')
     plt.grid(True)
     plt.savefig(output_path)
+    plt.clf()
 
     # Create a directory plots
     output_directory = 'results/plots'
@@ -79,6 +80,7 @@ if __name__ == '__main__':
     plt.xlabel(f'Quality score, max score = {best_quality_score}')
     plt.ylabel(f'Frequency (N = {iterations})')
     plt.savefig(output_path)
+    plt.clf()
 
     # Create a directory called csv_files
     output_directory = 'results/csv_files'
