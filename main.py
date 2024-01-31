@@ -15,7 +15,6 @@ from code.algorithms.depth_first import Depth_first
 from code.algorithms.breadth_first import Breadth_first
 from code.algorithms.hillclimber import Hillclimber
 from code.algorithms.local_search import Local_search
-from code.algorithms.simulated_annealing import Simulated_annealing
 
 # Import from functions
 sys.path.append('functions')
