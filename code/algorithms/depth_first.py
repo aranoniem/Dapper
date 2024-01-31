@@ -239,8 +239,10 @@ class Depth_first():
 
         for trajectory in railnetwork:
             self.add_to_trajectory_class(trajectory)
-            _time - self.archive.get_time()
+            _time = self.archive.get_time()
+            #TEST print(f'_time in loop =', _time)
             total_time += _time
+        #TEST print(f'TOTALE TIJD;', total_time)
         return total_time
 # depth_first max_trajectories aantal keer laten runnen en dan steeds de laatste pakken??
 
