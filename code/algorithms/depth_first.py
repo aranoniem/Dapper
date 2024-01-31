@@ -42,6 +42,7 @@ class Depth_first():
         self.is_timeframe = False
 
         self.best_value = 0
+        self.best_solution = []
 
         # Get the starting station
         self.random_station = get_random_station(self.data)
@@ -195,7 +196,8 @@ class Depth_first():
         if new_value >= old_value:
             self.best_solution = railnetwork
             self.best_value = new_value
-            #TEST print(f"New best value:", self.best_value)
+            #TEST
+            print(f"New best value:", self.best_value, 'and railnetwork:', railnetwork)
             return True
         return False
 
@@ -225,13 +227,16 @@ class Depth_first():
 
             # Check if solution is better than previous iteration
             if self.check_solution(railnetwork, time):
+                pass
+            else:
+                # Remove the last trajectory only if it's not part of the best solution
                 railnetwork.pop()
 
             # Quit if maximum amount of trajectories have been reached
             if len(railnetwork) >= max_trajectory:
                 break
-        print(f'railnetwork:', railnetwork, 'score:', self.best_value)
-        return (self.best_value, railnetwork)
+        #TEST print(f'railnetwork:', self.best_solution, 'score:', self.best_value)
+        return (self.best_value, self.best_solution)
 
     def calc_total_time(self, railnetwork):
         total_time = 0
