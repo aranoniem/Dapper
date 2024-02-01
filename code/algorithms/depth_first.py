@@ -32,26 +32,9 @@ class Depth_first():
         # Initialise a self for other functions to use the variable
         self.level = level
 
-        # Initialise stack for algorithm to use
-        self.stack = []
 
-        # Initialise list to store succesful trajectories
-        self.trajectories_stack: List[List[str]] = []
 
-        # Initialise boolean for time constraint
-        self.is_timeframe = False
-
-        self.best_value = 0
-        self.best_solution: List[List[str]] = []
-
-        # Get the starting station
-        self.random_station = get_random_station(self.data)
-
-        # Add starting station to stack
-        self.stack.append(self.random_station)
-
-        # Add starting station to visited stations
-        self.visited_stations = [self.random_station]
+        
 
     def get_next_trajectory(self):
         """
@@ -191,6 +174,26 @@ class Depth_first():
         pre: choose a level, a maximum amount of trajectories and a timeframe
         post: returns a railnetwork (list: [list]) and their quality score
         """
+        # Initialise stack for algorithm to use
+        self.stack = []
+
+        # Initialise list to store succesful trajectories
+        self.trajectories_stack: List[List[str]] = []
+
+        # Initialise boolean for time constraint
+        self.is_timeframe = False
+
+        self.best_value = 0
+        self.best_solution: List[List[str]] = []
+
+        # Get the starting station
+        self.random_station = get_random_station(self.data)
+
+        # Add starting station to stack
+        self.stack.append(self.random_station)
+
+        # Add starting station to visited stations
+        self.visited_stations = [self.random_station]
         # Run the depth-first search to generate trajectories from one starting
         # station
         results = self.run(timeframe)
