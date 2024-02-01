@@ -188,7 +188,6 @@ class Depth_first():
 
         # Get the starting station
         self.random_station = get_random_station(self.data)
-        print(self.random_station)
 
         # Add starting station to stack
         self.stack.append(self.random_station)
