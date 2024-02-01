@@ -35,7 +35,8 @@ class Local_search(Hillclimber):
 
         # Calculate total time of the trajectory
         total_time = 0
-        for i in range(len(railnetwork)):
+        trajectory_count = len(railnetwork)
+        for i in range(trajectory_count):
             trajectory = Trajectory(railnetwork[i], self.data)
             trajectory.calc_time()
             time = trajectory.get_time()
@@ -46,23 +47,27 @@ class Local_search(Hillclimber):
             temp_railnetwork = railnetwork.copy()
 
             for i in range(len(temp_railnetwork)):
-                # Search if deleting the first station will improve the
-                # solution
+                # Search if deleting the first station will improve the solution
                 temp_trajectory = temp_railnetwork[i].copy()
+                
                 deleted_time = self.data[temp_trajectory[0]].get_distance(temp_trajectory[1])
                 temp_trajectory.pop(0)
+                
                 temp_total_time = total_time - deleted_time
                 temp_railnetwork[i] = temp_trajectory
+                
                 temp_quality_score = Score(self.level, temp_railnetwork, temp_total_time).K
 
                 if temp_quality_score > quality_score:
-                    temp_railnetwork[i] = temp_trajectory.copy()
-                    railnetwork = temp_railnetwork
+                    railnetwork = temp_railnetwork.copy()
                     total_time = temp_total_time
                     quality_score = temp_quality_score
                     iterations = 0
+                else:
+                    temp_railnetwork[i] = railnetwork[i].copy()
 
             iterations += 1
+
         iterations = 0
 
         while iterations <= 1:
@@ -72,19 +77,23 @@ class Local_search(Hillclimber):
             for i in range(len(temp_railnetwork)):
                 # Search if deleting the last station will improve the solution
                 temp_trajectory = temp_railnetwork[i].copy()
+
                 length_trajectory = len(temp_trajectory) - 1
                 deleted_time = self.data[temp_trajectory[length_trajectory]].get_distance(temp_trajectory[length_trajectory - 1])
-                temp_trajectory.pop()
+                temp_trajectory.pop(-1)
+
                 temp_total_time = total_time - deleted_time
                 temp_railnetwork[i] = temp_trajectory
+                
                 temp_quality_score = Score(self.level, temp_railnetwork, temp_total_time).K
 
                 if temp_quality_score > quality_score:
-                    temp_railnetwork[i] = temp_trajectory.copy()
-                    railnetwork = temp_railnetwork
+                    railnetwork = temp_railnetwork.copy()
                     total_time = temp_total_time
                     quality_score = temp_quality_score
                     iterations = 0
+                else:
+                    temp_railnetwork[i] = railnetwork[i].copy()
 
             iterations += 1
 

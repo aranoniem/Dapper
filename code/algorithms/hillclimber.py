@@ -68,6 +68,7 @@ class Hillclimber(Semi_random):
                 quality_score, railnetwork, total_time = self.swap_trajectory(quality_score, railnetwork, total_time)
 
             self.iterations += 1
+            print(self.iterations)
         return quality_score, railnetwork
 
     def remove_trajectory(self, quality_score: float, railnetwork: List[Any], total_time: int) -> Tuple[float, List[Any], int]:

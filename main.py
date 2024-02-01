@@ -38,6 +38,7 @@ if __name__ == '__main__':
 
     # Run algorithm of choice
     for i in range(iterations):
+        print(f"YOU ARE AT", i, "ITERATIONS")
         if algorithm_choice == "hillclimber" or algorithm_choice == "local_search":
             quality_score, railnetwork = algorithm.solve(trajectories, timeframe, max_iterations)
         else:
