@@ -38,7 +38,6 @@ if __name__ == '__main__':
 
     # Run algorithm of choice
     for i in range(iterations):
-        print(f"YOU ARE AT", i, "ITERATIONS")
         if algorithm_choice == "hillclimber" or algorithm_choice == "local_search":
             quality_score, railnetwork = algorithm.solve(trajectories, timeframe, max_iterations)
         else:
@@ -88,7 +87,7 @@ if __name__ == '__main__':
     os.makedirs(output_directory, exist_ok=True)
 
     # Finetune output
-    railnetwork = finetune_railnetwork(railnetwork)
+    best_railnetwork = finetune_railnetwork(best_railnetwork)
 
     # Save railnetwork to CSV
     railnetwork_csv_path = os.path.join(output_directory, f'{level_name}_{iterations}_{algorithm_choice}.csv')
